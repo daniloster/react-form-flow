@@ -1,0 +1,30 @@
+sudo: true
+language: node_js
+node_js:
+- 9.10.0
+- 8.10.0
+cache:
+  yarn: true
+before_install:
+- chmod +x ./.travis/*.sh
+- "./.travis/validate_last_commit_message.sh"
+- npm run tools
+install:
+- yarn install
+script:
+- echo "Running tests against $(node -v) ..."
+- yarn run validate
+jobs:
+  include:
+  - stage: release
+    node_js: 8.10.0
+    script:
+    - echo "Deploying to npm ..."
+    - "./.travis/publish.sh"
+branches:
+  only:
+  - master
+env:
+  global:
+  - secure: PqHGj4+lIKSl3TgmzitHdpblioN7jw5wYLbMCD518N8RH+aiEFhnEKeSJ/Sln3HtTpsCU5LVubHjU8f9kmnapbUSmCS86EukM5r5SC5ndynVvwysr8i2XQjCwp1/sWP9SScY8DaeyaEbGT0NDYkmIs3jGsKqC1/XUA5icgPb6dQjag6P5agZxm+56o1E4Or9CCipnfhPakUOEXK8GEBrZS7fON/gM3PrIoPZudefP8I4z+XvR45wax1SLc67PNVDFd+YsBu5ZcnUAtc0J4sKxiO/yGDtymJ/eugUF/dgxbibA3R6LjL/g1j/5AiGhce/qZnIhNWVe2ZiBftkGQyFcS1tvrn1bQ1Xa5V4lWAo1moBgzng0ZqhEsFqcbpC6265XH9l5gmIynz/20UxNeldfxHfy+Ht8P8PWueaaDBGC9KKGU/kpTuwAx5yA1BZwqLKdthv7NFEcTyzuM4sQIq+0kTXzzB4LrWI7FJRUU49FuYfEGhe4ALmt8aEEpNDKrcXKm/tQuN8QMrpJy3AVoravGk5lH+I4+MCjvx8YpOBV40nVoBESRPAZhj3YqXAEeTOFqmwGzxfJcUIbzfknH5IfJFxmStSNJUHxJ8PB5lzW6dOynWA12IRTpOuSxpLKSZDAHxZH/Jp0Y1O1jXBdKjpP9Pj+d3nsWlcUYD2nz6tKFA=
+  - secure: FZGbEhOgl6CT+rWkaekr775CGDc7a7OzkTf/Oi71qg8gnMWwpJ2MkOyTB/pF01bX+kXGfXdAty0EPl0VMBgjXceY7/YdCBydRHkaSfE8SR/7X2u1GgOGB7/WLHpYhFYH3JlVcrmWvBrdWup/MrCQFJTqLzo+b2HU2BmKVXFMA34AjKVeVrcCdW3UzExRhGTofLPy+nyAKO+XcCSEsOpsgvyzOSSQayUd7mO50gO0NH+2caqoqsbOm9N+D5RL4119hmd2psxPU/vJtlf72MMqSiEopzvfGPbYRxpsKsGjROWQ18gia3Gr6CnqKVJvMt/riQtksiKWl/mAvVUhhL+rZ56/mhY/g2Qjk4mq/NGmZcgwcw3M3CWp4+b20RCAAQRYvSSYMeatzFldjCvHYGMRkULJL4W9iBzgH1uy6tlTydb7jhPMColqnmfW7v37ht2uWqvmiH3THBD6MKRK+eLx7wu411W8wBhl7bfSJA5j+oN1/T+jDEzw/h5PPVGx/CLdbcp5Nmo1yOh3Ul0wJsz5wK5mo0xfD3SwKu5NUqNYwAOXer3E9NspxdnNFO9Jj0KkxGfAmKNx6l6l7yWZqamfK6aM4PDqCSkFPQueYluoQkQvr6gNi92EtsWt3c7Mb0Th/p+9IfgXBEK+yJaFKxgTLp8LskrLt4NjF2dZKYgIJeE=

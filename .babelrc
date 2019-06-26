@@ -1,0 +1,13 @@
+{
+  "presets": ["@babel/preset-react", "@babel/preset-env"],
+  "plugins": [
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-export-namespace-from",
+    "@babel/plugin-proposal-throw-expressions",
+    "@babel/plugin-transform-modules-umd",
+    ["styled-components", { "ssr": true }],
+    "@babel/transform-runtime"
+  ],
+  "ignore": ["/lib|node_modules|.spec.js/"]
+}
