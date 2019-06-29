@@ -64,6 +64,7 @@ export default function useFormFlowValidation(path) {
       if (hasBeenInvalidatedByDependencies) {
         localCacheRef.current.validations = validationRules.validate({
           data: dataToValidate,
+          get,
           path,
           value,
         });

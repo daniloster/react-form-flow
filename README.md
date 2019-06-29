@@ -10,6 +10,13 @@ Internationalise your app, extending config or factory new internationalised com
 - [react-form-flow](https://github.com/daniloster/react-form-flow/blob/master/README.md)
 - [react-form-flow/API](https://github.com/daniloster/react-form-flow/blob/master/API.md)
 
+## Contributions rules
+
+- Changes must be approved;
+- Changes must have tests passing on Travis-CI;
+- Changes must have coverage of 95% on Travis-CI for: statements, branches, functions and lines;
+- Last commit message must have attribute `[release=major|minor|patch|no-release]`;
+
 ## Current core dependencies versions
 
 - node: `^8.10.0 || ^9.10.0`
@@ -37,37 +44,8 @@ Installing with yarn
 yarn add react-form-flow
 ```
 
-## Getting started
+## Documentation
 
-`react-form-flow` as its name describes is a library to define a common and automated workflow to collect and validate form data. Allow user to consume the data and validation based on the json path.
-
-_JSON PATH_ is a notation to navigate through the JSON object.
-
-e.g.
-
-```js
-const data = {
-  person: {
-    id: 1,
-    name: 'Jane Doe',
-    email: 'jane@doe.dead'
-    children:[
-      {id: 2, name: 'John Doe'}
-    ]
-  }
-}
-```
-
-So, observing the json above, the json path to access the name of first child is `person.chidlren[0].name`.
-
-### Recipes
-
-- Creating factory for validations
-- Creating custom form fields
-
-## Contributions rules
-
-- Changes must be approved;
-- Changes must have tests passing on Travis-CI;
-- Changes must have coverage of 95% on Travis-CI for: statements, branches, functions and lines;
-- Last commit message must have attribute `[release=major|minor|patch|no-release]`;
+- [Getting started](./docs/markdown/GETTING_STARTED.md)
+- [Creating factory for validations](./docs/markdown/RECIPES_VALIDATIONS.md)
+- [Creating custom form fields](./docs/markdown/RECIPES_FIELDS.md)

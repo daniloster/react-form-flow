@@ -12,13 +12,34 @@ Use hooks to get values, event handler and validations.
 import { useFormFlowItem, useFormFlowValidation } from 'react-form-flow';
 ```
 
-### Getting Started with minimal example
+## Getting started
+
+`react-form-flow` as its name describes is a library to define a common and automated workflow to collect and validate form data. Allow user to consume the data and validation based on the json path.
 
 To improve your productivity, it would be good to create your core form components such as input, dropdowns and on and on following the `react-form-flow` spec.
 
-#### Validation
+_JSON PATH_ is a notation to navigate through the JSON object.
 
-```js static
+e.g.
+
+```js
+const data = {
+    person: {
+      id: 1,
+      name: 'Jane Doe',
+      email: 'jane@doe.dead'
+      children:[
+        {id: 2, name: 'John Doe'}
+      ]
+    }
+};
+```
+
+So, observing the json above, the json path to access the name of first child is `"person.chidlren[0].name"`.
+
+### Validation
+
+```jsx
 import React from 'react';
 
 export default function Validation({ label, validations }) {
@@ -31,20 +52,11 @@ export default function Validation({ label, validations }) {
 }
 ```
 
-#### InputField
+### InputField
 
 The input field could receive from the `useFormFlowItem` an object with the spec below.
 
-```js static
-/**
- * @typedef Validation
- * @property {object} data
- * @property {any} value
- * @property {string} path
- * @property {string} key
- * @property {boolean} isValid
- * @property {string} message
- * */
+```js
 {
   onChangeValue /* Function to update an object regarding the json path and value */,
   onChange /* Function to handle input event "change" */,
@@ -56,11 +68,26 @@ The input field could receive from the `useFormFlowItem` an object with the spec
 
 Component...
 
-```js static
+```jsx
 import React from 'react';
 import Validation from './Validation';
 
-export default function InputField({ label, onChange, validations, value }) {
+/**
+ * @typedef Validation
+ * @property {object} data
+ * @property {any} value
+ * @property {string} path
+ * @property {string} key
+ * @property {boolean} isValid
+ * @property {string|React.node} message
+ * */
+
+export default function InputField({
+  label,
+  onChange,
+  validations /* {array<Validation>} */,
+  value,
+}) {
   return (
     <div>
       <div>{label}</div>
@@ -79,7 +106,7 @@ InputField.defaultProps = {
 
 #### schemaData
 
-```js static
+```jsx
 import { createValidations } from 'react-form-flow';
 
 function createRequiredValidation(message) {
@@ -131,7 +158,13 @@ const schemaData = {
 
 #### App
 
-```js static
+A few things are required in order to use the provider.
+
+- initialData: the initial data to be rendered in the form
+- schemaData: an object with validation rules per json path
+- children: the react node being wrapped by the provider
+
+```jsx
 import React from 'react';
 // eslint-disable-next-line
 import styled from 'styled-components';
@@ -182,7 +215,7 @@ function Form() {
 function DemoApp() {
   return (
     <Layout>
-      <FormFlowProvider initialData={{}} schemaData={schemaData}>
+      <FormFlowProvider initialData={{ name: '', description: '' }} schemaData={schemaData}>
         <Validations />
         <Form />
       </FormFlowProvider>
@@ -193,6 +226,6 @@ function DemoApp() {
 
 Running...
 
-```js static
+```jsx
 <DemoApp />
 ```
