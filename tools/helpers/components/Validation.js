@@ -1,9 +1,18 @@
 import React from 'react';
+import styled from 'styled-components';
 
-export default function Validation({ label, validations }) {
+const LabelFeedback = styled.div`
+  color: ${({ isColored, isValid }) => (isColored ? (isValid ? 'green' : 'red') : 'black')};
+`;
+
+export default function Validation({ isColored = false, label, validations = [] }) {
   return (
     <section>
-      {!!label && <div>{label}</div>}
+      {!!label && (
+        <LabelFeedback isColored={isColored} isValid={!validations.some(({ isValid }) => !isValid)}>
+          {label}
+        </LabelFeedback>
+      )}
       {validations.map(({ key, isValid, message }) => !isValid && <div key={key}>{message}</div>)}
     </section>
   );

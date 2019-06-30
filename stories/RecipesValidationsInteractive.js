@@ -1,45 +1,36 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { parse } from 'ipaddr.js';
-import {
-  FormFlowProvider,
-  useFormFlowItem,
-  useFormFlowValidation,
-  createValidations,
-} from '../src';
-import Validation from '../tools/helpers/components/Validation';
+import { createValidations } from '../src';
 import RecipesValidations from './RecipesValidations';
+import hasValue from '../tools/helpers/components/hasValue';
 
-function UpdateData({ data }) {
-  const { setData } = useFormFlowItem();
+function decode(text) {
+  const parser = document.createElement('div');
 
-  useEffect(() => {
-    setData(data);
-  }, [data, setData]);
+  parser.innerHTML = text;
+  return parser.textContent;
 }
 
-function Validations() {
-  const { validations } = useFormFlowValidation();
+function parse(text) {
+  return JSON.parse(decode(text));
+}
+
+export default function RecipesValidationsInteractive({ data, factories, schemaData }) {
+  const newData = parse(data);
+  // eslint-disable-next-line
+  const getSchemaData = new Function(
+    'createValidations',
+    'hasValue',
+    `${decode(factories)} return ${decode(schemaData)};`
+  );
 
   return (
-    <div>
-      {validations.map(({ key, path, ...validation }) => (
-        <Validation key={key} label={path} {...validation} />
-      ))}
-    </div>
+    <RecipesValidations data={newData} schemaData={getSchemaData(createValidations, hasValue)} />
   );
-}
-
-export default function RecipesValidationsInteractive({ data, schemaData }) {
-  const newData = parse(data);
-  const getSchemaData = new Function(
-    `const createValidations = arguments[0]; return ${schemaData};`
-  );
-
-  return <RecipesValidations data={newData} schemaData={getSchemaData(createValidations)} />;
 }
 
 RecipesValidationsInteractive.propTypes = {
-  data: PropTypes.shape({}).isRequired,
-  schemaData: PropTypes.shape({}).isRequired,
+  data: PropTypes.string.isRequired,
+  factories: PropTypes.string.isRequired,
+  schemaData: PropTypes.string.isRequired,
 };

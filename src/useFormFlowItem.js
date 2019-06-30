@@ -22,10 +22,11 @@ export default function useFormFlowItem(path) {
     },
     [path, onChangeByPath]
   );
-  const value = useMemo(() => get(data, path), [data, path]);
+  const value = useMemo(() => (path ? get(data, path) : data), [data, path]);
   const { validations } = useFormFlowValidation(path);
 
   return {
+    data,
     onChangeValue,
     onChange,
     setData,

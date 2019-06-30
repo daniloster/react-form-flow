@@ -1,6 +1,6 @@
 # react-form-flow
 
-Internationalise your app, extending config or factory new internationalised components.
+Manage your form through a minimal minimal structure for capturing and validating form data.
 
 [![NPM](https://img.shields.io/npm/v/react-form-flow.svg?style=flat-square) ![NPM](https://img.shields.io/npm/dm/react-form-flow.svg?style=flat-square)](https://www.npmjs.com/package/react-form-flow)
 [![Build Status](https://img.shields.io/travis/daniloster/react-form-flow/master.svg?style=flat-square)](https://travis-ci.org/daniloster/react-form-flow)

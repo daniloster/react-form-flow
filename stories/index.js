@@ -46,41 +46,49 @@ storiesOf('Recipes', module)
       const data = text(
         'Data',
         `{
-        name: '',
-        description: '',
-        passaport: {
-          visa: {
-            value: 3,
-            unit: 'days'
-          }
-        }
-      }`
+  "name": "",
+  "description": "",
+  "passport": {
+    "visa": {
+      "value": 3,
+      "unit": "days"
+    }
+  }
+}`
       );
       const schemaData = text(
         'Schema',
         `{
-        name: createValidations(
-          [],
-          ({ data, value, path }) => {
-            const key = \`\${path}-required\`;
-            const isValid = hasValue(value);
+  name: createValidations(
+    [],
+    createRequiredValidation('Name is required.')
+  ),
+  description: createValidations(
+    [],
+    createRequiredValidation('Description is required.')
+  )
+}`
+      );
+      const factories = text(
+        'Factories',
+        `/* Put your factory functions here in order to use in the schemaData */
 
-            return { data, value, path, key, isValid, message };
-          }
-        ),
-        description: createValidations(
-          [],
-          ({ data, value, path }) => {
-            const key = \`\${path}-required\`;
-            const isValid = hasValue(value);
+/* Example */
+function createRequiredValidation(message) {
+  return ({ data, value, path }) => {
+    const key = \`\${path}-required\`;
+    const isValid = hasValue(value);
 
-            return { data, value, path, key, isValid, message };
-          }
-        )
-      }`
+    return { data, value, path, key, isValid, message };
+  };
+}
+/* End: Example */
+`
       );
 
-      return <RecipesValidationsInteractive data={data} schemaData={schemaData} />;
+      return (
+        <RecipesValidationsInteractive data={data} factories={factories} schemaData={schemaData} />
+      );
     },
     {
       notes: { markdown: recipesValidations },

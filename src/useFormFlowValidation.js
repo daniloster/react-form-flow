@@ -12,13 +12,13 @@ function hasChanged(currentValues, previousValues) {
 }
 
 function hasPathMatched(validationPath, path) {
-  return path === validationPath || path === clearIndexes(validationPath);
+  return !path || path === validationPath || path === clearIndexes(validationPath);
 }
 
 /**
  * Perform validation over the form data based on the path provided
  */
-export default function useFormFlowValidation(path) {
+export default function useFormFlowValidation(path = '') {
   const [data] = useContext(FormFlowDataContext);
   const [schemaData, cache] = useContext(FormFlowValidationContext);
   const { allValidations, byPath } = cache;
@@ -41,7 +41,7 @@ export default function useFormFlowValidation(path) {
   const validate = useCallback(
     dataToValidate => {
       if (!path) {
-        return [];
+        return allValidations;
       }
 
       const validationRules = schemaData[path] || schemaData[clearIndexes(path)];

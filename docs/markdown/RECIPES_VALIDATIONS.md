@@ -109,7 +109,7 @@ function createMinMaxLengthValidation(mins, maxs, Message) {
   return args => {
     const { data, get, value, path } = args;
     const key = `${path}-min-max`;
-    const unit = get('passaport.visa.unit');
+    const unit = get('passport.visa.unit');
     const min = mins[unit];
     const max = maxs[unit];
     const isValid = !hasValue(value) || (value <= max && value >= min);
@@ -132,12 +132,12 @@ const maxs = {
 };
 
 const schemaData = {
-  'passaport.visa.value': createValidations(
-    ['passaport.visa.unit'], // Invalidation Json Paths
+  'passport.visa.value': createValidations(
+    ['passport.visa.unit'], // Invalidation Json Paths
     createRequiredValidation('The visa must indicate how many days is allowed to stay.'),
     createMinMaxLengthValidation(mins, max, MinMaxLengthMessage)
   ),
-  'passaport.visa.unit': createValidations(
+  'passport.visa.unit': createValidations(
     [], // Invalidation Json Paths
     createRequiredValidation('Please select a unit to define how long the visa is valid.')
   ),

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FormFlowProvider, useFormFlowItem, useFormFlowValidation } from '../src';
 import Validation from '../tools/helpers/components/Validation';
@@ -9,25 +10,42 @@ function UpdateData({ data }) {
   useEffect(() => {
     setData(data);
   }, [data, setData]);
+
+  return null;
 }
 
-function Validations() {
+const ValidationsLayout = styled.div`
+  hr:last-child {
+    display: none;
+  }
+`;
+
+function Validations({ schemaData }) {
   const { validations } = useFormFlowValidation();
 
   return (
-    <div>
-      {validations.map(({ key, path, ...validation }) => (
-        <Validation key={key} label={path} {...validation} />
+    <ValidationsLayout>
+      {Object.keys(schemaData).map(jsonPath => (
+        <React.Fragment>
+          <Validation
+            isColored
+            key={jsonPath}
+            label={jsonPath}
+            validations={validations.filter(({ path }) => jsonPath === path)}
+          />
+          <hr />
+        </React.Fragment>
       ))}
-    </div>
+    </ValidationsLayout>
   );
 }
 
 export default function RecipesValidations({ data, schemaData }) {
   return (
     <FormFlowProvider initialData={data} schemaData={schemaData}>
+      <h2>Try change the validations or the data in the console below...</h2>
       <UpdateData data={data} />
-      <Validations />
+      <Validations schemaData={schemaData} />
     </FormFlowProvider>
   );
 }
