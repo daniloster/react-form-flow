@@ -15,5 +15,6 @@
       "statements": 90
     }
   },
+  "setupFilesAfterEnv": ["<rootDir>/tools/helpers/jest.js"],
   "verbose": false
 }

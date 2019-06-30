@@ -1,42 +1,54 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import FormFlowProvider from '../src/FormFlowProvider';
+import { act } from 'react-dom/test-utils';
+import { FormFlowProvider, useFormFlowItem } from '../src';
+import InputField from '../tools/helpers/components/InputField';
+import schemaDataPerson from '../tools/helpers/components/schemaDataPerson';
 
-describe('<FormFlowProvider />', () => {
-  describe('getI18n should return default "en" for no entry in localeData', () => {
-    let value;
-    it('Given getI18n is executed to localeData with no "fr" and lang "fr"', () => {
-      value = getI18n('en', 'fr', localeData);
-    });
-    it('Expect locale be "en"', () => {
-      expect(value).to.be.eql('en');
-    });
+function PersonForm() {
+  const nameField = useFormFlowItem('name');
+  const ageField = useFormFlowItem('age');
+
+  return (
+    <div>
+      <InputField {...nameField} label="Name" />
+      <InputField {...ageField} label="Age" />
+    </div>
+  );
+}
+
+function mountComponent(customProps = {}) {
+  const props = {
+    initialData: {
+      name: '',
+      age: '',
+    },
+    schemaData: schemaDataPerson,
+    ...customProps,
+  };
+
+  let element;
+  act(() => {
+    element = mount(<FormFlowProvider children={<PersonForm />} {...props} />);
   });
 
-  describe('localise to create a new component with different localisation ', () => {
-    const localisationData = {
-      pt: { name: 'Dan_en' },
-    };
-    const Name = ({ i18n }) => <span>{i18n.name}</span>;
-    const NameLocalised = localise(localisationData)(Name);
-    NameLocalised.extend({ pt: { name: 'Dan_pt' } });
-    const NameFactoredLocalised = NameLocalised.factory({ pt: { name: 'Dan_pt_factored' } });
-    let element;
-    it('Given I rendered an extended and a factored localised components', () => {
-      element = mount(
-        <div>
-          <I18nProvider defaultLanguage="pt">
-            <NameLocalised />
-            <NameFactoredLocalised />
-          </I18nProvider>
-        </div>
-      );
+  return {
+    element,
+    props,
+  };
+}
+
+describe('<FormFlowProvider />', () => {
+  describe('FormFlowProvider give access to data and value of a json path by using useFormFlowItem', () => {
+    let scenario;
+    it('Given FormFlowProvider has the empty initial data', () => {
+      scenario = mountComponent();
     });
-    it('Expect the extended component to have content "Dan_pt"', () => {
-      assertComponentContent(element, NameLocalised, 'Dan_pt');
-    });
-    it('And the factored component to have content "Dan_pt_factored"', () => {
-      assertComponentContent(element, NameFactoredLocalised, 'Dan_pt_factored');
+    it('Expect to see required validation for name and age', () => {
+      const validations = scenario.element.find('.Validation__message');
+      expect(validations.length).toBe(2);
+      expect(validations.at(0).text()).toBe('Name is required!');
+      expect(validations.at(1).text()).toBe('Age is required!');
     });
   });
 });

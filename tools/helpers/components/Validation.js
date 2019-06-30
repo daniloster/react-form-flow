@@ -13,7 +13,14 @@ export default function Validation({ isColored = false, label, validations = [] 
           {label}
         </LabelFeedback>
       )}
-      {validations.map(({ key, isValid, message }) => !isValid && <div key={key}>{message}</div>)}
+      {validations.map(
+        ({ key, isValid, message }) =>
+          !isValid && (
+            <div className="Validation__message" key={key}>
+              {message}
+            </div>
+          )
+      )}
     </section>
   );
 }
