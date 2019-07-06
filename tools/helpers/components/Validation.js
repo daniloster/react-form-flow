@@ -5,9 +5,15 @@ const LabelFeedback = styled.div`
   color: ${({ isColored, isValid }) => (isColored ? (isValid ? 'green' : 'red') : 'black')};
 `;
 
+const ValidationLayout = styled.section`
+  .ValidationLayout__message {
+    color: red;
+  }
+`;
+
 export default function Validation({ isColored = false, label, validations = [] }) {
   return (
-    <section>
+    <ValidationLayout>
       {!!label && (
         <LabelFeedback isColored={isColored} isValid={!validations.some(({ isValid }) => !isValid)}>
           {label}
@@ -16,11 +22,11 @@ export default function Validation({ isColored = false, label, validations = [] 
       {validations.map(
         ({ key, isValid, message }) =>
           !isValid && (
-            <div className="Validation__message" key={key}>
+            <div className="ValidationLayout__message" key={key}>
               {message}
             </div>
           )
       )}
-    </section>
+    </ValidationLayout>
   );
 }
