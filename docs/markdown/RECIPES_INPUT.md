@@ -40,10 +40,9 @@ export default function Validation({ validations = [] }) {
 
 In the case below, validations are received always and the consumer decides when to display them.
 
-For this case, we are only displaying after visiting the field, but, nothing block you to pass another property `showValidation` when the form is submitted, then, it would be able to display by `{(isVisited || showValidation) && <Validation validations={validations} />}`.
+**Note**: For this case, we are only displaying after visiting the field, but, nothing block you to pass another property `showValidation` when the form is submitted, then, it would be able to display by `{(isVisited || showValidation) && <Validation validations={validations} />}`.
 
 ```jsx
-import { createValidations } from 'react-form-flow';
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
@@ -93,4 +92,45 @@ InputField.defaultProps = {
   validations: [],
   value: '',
 };
+```
+
+## Using the InputField
+
+```jsx
+import React, { useCallback, useRef, useState } from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import uuid from 'uuid';
+import { useFormFlowItem } from 'react-form-flow';
+import Validation from '../tools/helpers/components/Validation';
+
+const InputFieldRecipeLayout = styled.div``;
+
+export default function InputFieldRecipe() {
+  const nameField = useFormFlowItem('name');
+
+  return (
+    <InputFieldRecipeLayout>
+      <h2>Interact with the input field by focusing and leaving the field...</h2>
+
+      <InputField {...nameField} label="Name" />
+      <div>{nameField.value}</div>
+    </InputFieldRecipeLayout>
+  );
+}
+```
+
+And then...
+
+```jsx
+  import { FormFlowProvider } from 'react-form-flow';
+
+  const initialData = { ... };
+  const schemaData = { ... };
+
+  // ...
+
+  <FormFlowProvider initialData={initialData} schemaData={schemaData}>
+    <InputFieldRecipe />
+  </FormFlowProvider>
 ```
