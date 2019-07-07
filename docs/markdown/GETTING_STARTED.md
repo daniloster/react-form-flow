@@ -158,11 +158,11 @@ const schemaData = {
 
 #### App
 
-A few things are required in order to use the provider.
+A few things are required in order to use the `react-form-flow` library.
 
 - initialData: the initial data to be rendered in the form
 - schemaData: an object with validation rules per json path
-- children: the react node being wrapped by the provider
+- children: the react node being wrapped by the provider containing the real form within fields
 
 ```jsx
 import React from 'react';
