@@ -4,6 +4,7 @@ import { withKnobs, text, number } from '@storybook/addon-knobs';
 import withLayout from './withLayout';
 import getingStated from '../docs/markdown/GETTING_STARTED.md';
 import recipesValidations from '../docs/markdown/RECIPES_VALIDATIONS.md';
+import checkboxField from '../docs/markdown/RECIPES_CHECKBOX.md';
 import dropdownField from '../docs/markdown/RECIPES_DROPDOWN.md';
 import inputField from '../docs/markdown/RECIPES_INPUT.md';
 
@@ -12,6 +13,7 @@ import RecipesValidationsInteractive from './RecipesValidationsInteractive';
 import FormFields from './FormFields';
 import InputFieldRecipe from './InputFieldRecipe';
 import DropdownFieldRecipe from './DropdownFieldRecipe';
+import CheckboxFieldRecipe from './CheckboxFieldRecipe';
 
 storiesOf('Form', module)
   .addDecorator(withKnobs)
@@ -96,6 +98,17 @@ function createRequiredValidation(message) {
     },
     {
       notes: { markdown: recipesValidations },
+    }
+  )
+  .add(
+    'Checkbox Field Recipe',
+    () => (
+      <FormFields>
+        <CheckboxFieldRecipe />
+      </FormFields>
+    ),
+    {
+      notes: { markdown: checkboxField },
     }
   )
   .add(
