@@ -36,7 +36,7 @@ export default function Validation({ validations = [] }) {
 }
 ```
 
-### DropdownField
+### CheckboxField
 
 Here, validations are received always and the consumer decides when to display them.
 
@@ -126,7 +126,7 @@ CheckboxField.defaultProps = {
 };
 ```
 
-## Using the DropdownField
+## Using the CheckboxField
 
 After building the Dropdown, see below how to use it.
 

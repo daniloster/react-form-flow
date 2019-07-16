@@ -7,13 +7,15 @@ import recipesValidations from '../docs/markdown/RECIPES_VALIDATIONS.md';
 import checkboxField from '../docs/markdown/RECIPES_CHECKBOX.md';
 import dropdownField from '../docs/markdown/RECIPES_DROPDOWN.md';
 import inputField from '../docs/markdown/RECIPES_INPUT.md';
+import radioField from '../docs/markdown/RECIPES_RADIO.md';
 
 import AppInteractive from './AppInteractive';
 import RecipesValidationsInteractive from './RecipesValidationsInteractive';
 import FormFields from './FormFields';
-import InputFieldRecipe from './InputFieldRecipe';
-import DropdownFieldRecipe from './DropdownFieldRecipe';
 import CheckboxFieldRecipe from './CheckboxFieldRecipe';
+import DropdownFieldRecipe from './DropdownFieldRecipe';
+import InputFieldRecipe from './InputFieldRecipe';
+import RadioFieldRecipe from './RadioFieldRecipe';
 
 storiesOf('Form', module)
   .addDecorator(withKnobs)
@@ -131,5 +133,16 @@ function createRequiredValidation(message) {
     ),
     {
       notes: { markdown: inputField },
+    }
+  )
+  .add(
+    'Radio Field Recipe',
+    () => (
+      <FormFields>
+        <RadioFieldRecipe />
+      </FormFields>
+    ),
+    {
+      notes: { markdown: radioField },
     }
   );
