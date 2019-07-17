@@ -1,0 +1,4 @@
+[submodule "react-form-flow-examples"]
+	path = react-form-flow-examples
+	url = git@github.com:daniloster/react-form-flow-examples.git
+	branch = master
