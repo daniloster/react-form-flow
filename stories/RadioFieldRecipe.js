@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useFormFlowItem } from '../src';
-import RadioField from '../tools/helpers/components/Radiofield';
+import RadioField from '../react-form-flow-examples/fields/Radiofield';
 
 const RadioFieldRecipeLayout = styled.div``;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useFormFlowItem } from '../src';
-import DropdownField from '../tools/helpers/components/DropdownField';
+import DropdownField from '../react-form-flow-examples/fields/DropdownField';
 
 const DropdownFieldRecipeLayout = styled.div``;
 

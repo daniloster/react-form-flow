@@ -3,17 +3,8 @@ import { get } from 'mutation-helper';
 import FormFlowDataContext from './FormFlowDataContext';
 import FormFlowValidationContext from './FormFlowValidationContext';
 import { clearIndexes } from './validationUtils';
-
-function hasChanged(currentValues, previousValues) {
-  return (
-    previousValues.filter((value, idx) => value === currentValues[idx]).length !==
-    currentValues.length
-  );
-}
-
-function hasPathMatched(validationPath, path) {
-  return !path || path === validationPath || path === clearIndexes(validationPath);
-}
+import hasChanged from './hasChanged';
+import hasPathMatched from './hasPathMatched';
 
 /**
  * Perform validation over the form data based on the path provided
@@ -33,15 +24,16 @@ export default function useFormFlowValidation(path = '') {
       }
 
       return !allValidations.some(
-        ({ isValid, path: validationPath }) => !isValid && hasPathMatched(validationPath, path)
+        ({ isValid, path: validationPath }) =>
+          !isValid && allPaths.some(internalPath => hasPathMatched(validationPath, internalPath))
       );
     },
-    [allValidations, path]
+    [allValidations]
   );
   const validate = useCallback(
     dataToValidate => {
-      if (!path) {
-        return allValidations;
+      if (path.includes('[]')) {
+        return allValidations.filter(({ path: jsonPath }) => path === clearIndexes(jsonPath));
       }
 
       const validationRules = schemaData[path] || schemaData[clearIndexes(path)];
@@ -49,10 +41,17 @@ export default function useFormFlowValidation(path = '') {
       if (!validationRules) {
         return [];
       }
-
+      const indexesMatches = path.match(/(\[\d+\])/g);
+      const indexes = indexesMatches ? indexesMatches.slice() : [];
       const value = get(dataToValidate, path);
-      const values = (validationRules.invalidationPaths || []).map(invalidationPath =>
-        get(dataToValidate, invalidationPath)
+      const values = validationRules.invalidationPaths.map(invalidationPath =>
+        get(
+          dataToValidate,
+          indexes.reduce(
+            (finalPath, indexValue, index) => finalPath.replace(`[\$${index}]`, indexValue),
+            invalidationPath
+          )
+        )
       );
       values.push(value);
 

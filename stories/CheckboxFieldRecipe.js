@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useFormFlowItem } from '../src';
-import CheckboxField from '../tools/helpers/components/CheckboxField';
+import CheckboxField from '../react-form-flow-examples/fields/CheckboxField';
 
 const CheckboxFieldRecipeLayout = styled.div``;
 

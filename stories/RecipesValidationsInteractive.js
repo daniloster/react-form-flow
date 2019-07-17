@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { createValidations } from '../src';
 import RecipesValidations from './RecipesValidations';
-import hasValue from '../tools/helpers/components/hasValue';
+import hasValue from '../react-form-flow-examples/validationRecipes/hasValue';
 
 function decode(text) {
   const parser = document.createElement('div');

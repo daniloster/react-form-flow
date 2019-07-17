@@ -18,7 +18,7 @@ function derivatePaths(paths, data, prefix, remainingPaths) {
   const list = get(data, prefix);
   const suffix = remainingPaths.pop();
 
-  if (list.forEach) {
+  if (list && list.forEach) {
     list.forEach((_, idx) => {
       derivatePaths(paths, data, `${prefix}[${idx}]${suffix}`, remainingPaths.slice());
     });

@@ -99,7 +99,7 @@
     "install:yarn": "npm install yarn@$(cat package.json | grep \"yarn\" | awk '{print $2}' | cut -d'\"' -f2) -g",
     "tools": "npm run install:yarn",
     "test": "jest --config jestconfig.json --no-cache",
-    "testc": "jest --config jestconfig.json --no-cache --coverage",
+    "testc": "jest --config jestconfig.json --no-cache --coverage --coverageDirectory=./coverage",
     "test:watch": "npm run test -- --watch",
     "prebuild": "rm -rf lib/ && mkdir -p lib",
     "validate": "npm run test && npm run coverage && npm run check-coverage",

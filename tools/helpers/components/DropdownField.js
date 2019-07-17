@@ -55,7 +55,11 @@ export default function DropdownField({
               const text = formatText(option);
               const optionValue = formatValue(option);
 
-              return <option value={optionValue}>{text}</option>;
+              return (
+                <option key={optionValue} value={optionValue}>
+                  {text}
+                </option>
+              );
             })}
         </select>
       </label>

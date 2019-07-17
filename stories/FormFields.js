@@ -2,11 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FormFlowProvider, createValidations } from '../src';
-import createRequiredValidation from '../tools/helpers/components/createRequiredValidation';
-import createMinLengthValidation from '../tools/helpers/components/createMinLengthValidation';
-import createMaxLengthValidation from '../tools/helpers/components/createMaxLengthValidation';
-import createRequiredListValidation from '../tools/helpers/components/createRequiredListValidation';
-import RecipesFields from './RecipesFields';
+import createRequiredValidation from '../react-form-flow-examples/validationRecipes/createRequiredValidation';
+import createMinLengthValidation from '../react-form-flow-examples/validationRecipes/createMinLengthValidation';
+import createMaxLengthValidation from '../react-form-flow-examples/validationRecipes/createMaxLengthValidation';
+import createRequiredListValidation from '../react-form-flow-examples/validationRecipes/createRequiredListValidation';
 
 const schemaData = {
   name: createValidations(
