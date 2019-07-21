@@ -8,6 +8,7 @@ import checkboxField from '../docs/markdown/RECIPES_CHECKBOX.md';
 import dropdownField from '../docs/markdown/RECIPES_DROPDOWN.md';
 import inputField from '../docs/markdown/RECIPES_INPUT.md';
 import radioField from '../docs/markdown/RECIPES_RADIO.md';
+import addressBook from '../react-form-flow-examples/AddressBook/ADDRESS_BOOK.md';
 
 import AppInteractive from './AppInteractive';
 import RecipesValidationsInteractive from './RecipesValidationsInteractive';
@@ -16,6 +17,7 @@ import CheckboxFieldRecipe from './CheckboxFieldRecipe';
 import DropdownFieldRecipe from './DropdownFieldRecipe';
 import InputFieldRecipe from './InputFieldRecipe';
 import RadioFieldRecipe from './RadioFieldRecipe';
+import AddressBook from '../react-form-flow-examples/AddressBook';
 
 storiesOf('Form', module)
   .addDecorator(withKnobs)
@@ -42,6 +44,15 @@ storiesOf('Form', module)
     },
     {
       notes: { markdown: getingStated },
+    }
+  )
+  .add(
+    'Advanced Form Flow',
+    () => {
+      return <AddressBook />;
+    },
+    {
+      notes: { markdown: addressBook },
     }
   );
 
