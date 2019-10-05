@@ -1,4 +1,4 @@
-import { useContext, useCallback, useEffect, useRef } from 'react';
+import { useContext, useCallback } from 'react';
 import { set } from 'mutation-helper';
 import FormFlowDataContext from './FormFlowDataContext';
 
@@ -8,14 +8,19 @@ import FormFlowDataContext from './FormFlowDataContext';
  */
 export default function useFormFlow() {
   const [data, setData] = useContext(FormFlowDataContext);
-  const dataRef = useRef(data);
-  useEffect(() => {
-    dataRef.current = data;
-  }, [data]);
+  // const dataRef = useRef(data);
+  // useEffect(() => {
+  //   dataRef.current = data;
+  // }, [data]);
   const onChangeByPath = useCallback(
     (path, value) => {
-      dataRef.current = set(dataRef.current, path, value);
-      setData(dataRef.current);
+      setData(oldData => {
+        const newData = set(oldData, path, value);
+
+        return newData;
+      });
+      // dataRef.current = set(dataRef.current, path, value);
+      // setData(dataRef.current);
     },
     [setData]
   );
