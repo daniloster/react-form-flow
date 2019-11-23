@@ -2,6 +2,7 @@
 **/affected-packages.log
 **/.nyc_output
 **/coverage
+**/build
 **/mochawesome-report
 **/mochawesome-reports
 package-lock.json

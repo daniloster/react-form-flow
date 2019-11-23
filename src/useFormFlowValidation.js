@@ -48,7 +48,7 @@ export default function useFormFlowValidation(path = '') {
         get(
           dataToValidate,
           indexes.reduce(
-            (finalPath, indexValue, index) => finalPath.replace(`[\$${index}]`, indexValue),
+            (finalPath, indexValue, index) => finalPath.replace(`[$${index}]`, indexValue),
             invalidationPath
           )
         )
