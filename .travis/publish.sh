@@ -1,5 +1,6 @@
 #!/bin/bash
 set -u
+# -u abort script for unbounded variables
 
 # Validating if it is a PR
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then

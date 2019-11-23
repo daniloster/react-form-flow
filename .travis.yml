@@ -1,31 +1,31 @@
 sudo: true
 language: node_js
 node_js:
-  - 9.11.2
-  - 8.15.1
+- 9.11.2
+- 8.15.1
 cache:
   yarn: true
 before_install:
-  - chmod +x ./.travis/*.sh
-  - './.travis/validate_last_commit_message.sh'
-  - npm run tools
-  - yarn config set ignore-engines true
+- chmod +x ./.travis/*.sh
+- "./.travis/validate_last_commit_message.sh"
+- npm run tools
+- yarn config set ignore-engines true
 install:
-  - yarn
+- yarn
 script:
-  - echo "Running tests against $(node -v) ..."
-  - yarn validate
+- echo "Running tests against $(node -v) ..."
+- yarn validate
 jobs:
   include:
-    - stage: release
-      node_js: 8.15.1
-      script:
-        - echo "Deploying to npm ..."
-        - './.travis/publish.sh'
+  - stage: release
+    node_js: 8.15.1
+    script:
+    - echo "Deploying to npm ..."
+    - "./.travis/publish.sh"
 branches:
   only:
-    - master
+  - master
 env:
   global:
-    - secure: chLPBMmLL5HysaBht65tLMxYxIbpb4GXbLeXB16z4RV00g9nVLJhv1qb+sjY4+x3s/FBdlaIoyj/S1iJEnccPB8uUuLwH7uKrHe16+yxlF605Krdu6j5bIM6EpsIWoVWo9qsQRaGJkc4fIKXgXWn1j4J/6wzelZnAAKkrcg3Xyuzj3HR+7XG/WQkok6rMRsw2V1rY3XJYfBP3g06X0X3SNgmvpw6nSmfnhyERcZaAn3xi3COb4V4n14LoA047goABKzS/0NsWYu9TonjQUJc34ctKVT+qmA/1Jjv7j0ZtCeeC73s0+ruLc7U4gwAB3dK6o6LyfSq4exyE1NfJMYFRckVVvvyT10sl13ATVdprTLlUFoGkfRTwOnIDwY59qLzYJ+KVarmzpoNoi+kiIAmyhuiSbmQY+HSg/kz6l4oymO/cn5HFkAFQbRPN0gd1TRvaRyOVofLa3b/xzW4NoCH3wUpO0UXr5JufzHMPtuqRQgA6CyBUYyTjQOCsXNhuUgaPK0dYX1QzxfMMrgvIX8Sc+zHSMo57pjqhCG3yB5sbIHD5KTXRJNvNXZ0E4HCw3fxkZhmVgR9/fSOlqkbKNHKgfc9Nd7Chr+rxf78Zwi26rO/SVu5B6jX+AvblpmBnn9LF6FwsRrVE/XEsr9OTDa/qNkW9OxyWiuwOA4MjgjPgcA=
-    - secure: HUk0DD1VopZL/Q3AOV4KKQhWN3/O61oR1w/3+wBxjcrF8kx5ilqNWhCcZ+RLhboRhtVSZ1qr+UsCs7lVzDiXgqXBXqx6fXr6x94NwGZl58LG9KrF2E/F00V799OXjdeINYdGUxCOZMierSuwEixSXp1xbcLqZF99UrT2jgGuVdFM5iadJ0HZmY4ebFjr5ei1QF1Tq1EM4PI+gXTTAltiIwUwUS1ksOtBLXKCyldd75vIaMWuZ8xgjbX031+hvgBsSNEobvns9EvUxgZ8Mv/XGqmKslEckH0htHVshiWxJ5Xwec7H+3Hp7FjFg/kKIR1AJY60nr29O/fzQgGOf0wP/WxoO660PZU1CPCgndXi1AaQRL8FP21BNHpa5Luho+ZcR2dd3mLjR+tQ2skxMO1SH0e1SMAb7MYCrzbS3uHSe5DM9AN80JYRl7hhOwbOQl3s+eiHqeiBIoc9/Wvy/v14xdGcmXrS5Nudi7sHXl2h3HivN2Vz7dq/jfy/qEGT9jmqJ7GnXmu+rAeaRu27GEbGtvrqkcihzJw8zzBrSf4hUA2hLxzr5+7f8eX9fUNbORHjfpZj+5aq3e/bNXehO635K1bPiyNFVn0Aw3VPqqaQ+JjqJh5xCXqrCXVJML42SGwKvTuNMNDZYK1kdnxAJNajMFkK/2NSFhXVVSmVnXd3pGI=
+  - secure: jjI12X6p6wmQ6Z2tCpzIhyC7Nl0vFZEHzDvjnNl3uX7IdrHpY6Mg714tM9dDfnncSJrZfMai1ATns7NHLfW0Wah0skl/lvsZfOmSvodL1pwn9CtjChGPukeoOku4O1pW4YRYysQqSCOV11fd5p2hkA2baSARY3udSOCQaLxeNf6zyM6c/asy01sVQgKvvUkPJZUKWS4nSDdO0H9u2uvxjA6tceQ9GtT8Zq1l+pElYZRufmDNOEMY5kjAzKSVutlunfp5+OAlwFhSLMteRQR25AUPg4X9CgWk3yJQEAivDGuUHhCLqOQWQoAuxGP8S8ripfvbe7HM1rLqnoRNxSZqs/bn7/ClaiHBO9S4JA134zTMXcdiTpxs5bg80r6kBoMPzk1Dl6IBWCbkyFzqUci56s2VGVhtgrQpvOJJK9NkInYEzMXuaU8XEmZAm5j4Kz5ZENcfn5Dj34nnXAMzLmiI/gvLKbIeTPEvXHKea0VmFErsPBjsEK2NjKXmQwMphbfyyUWD4jceO7ZFJNzIN5w4/KPizkc/cpxbIAryiLpfJ19/oKdIuRo3aafrSrE1w69t5Gwy6IUJG1qPSBZ7PRf8qdUtl6VPMsAspKnkEuEMJfVfupRG2vtYEUrWKlCTuI4uQHtYD9O6XD5GIPmM06mhGVXe2oFjVEElkieaPBrX3J8=
+  - secure: Scv3oFXxDqbzWRdApOkNs88tJmXbRSOALlSOmfyDuNoM5N9e7pK5WZ0QJmli2n8hwz7ro7n+PLl2PB9T6vvvks15wSYjXQjosKcW9QX/CBJV9yvaJzafWMxtfsn1N7iqso1pcS745fPRIPtgyavz7GXuXtdi4rLaioVncGUfQplp5arnwshEL6wLN232w4n6LSLzpV9/Xa+D8lLdDxo+4T9VhBjPCLTv48wD3Vj7nQZR9VojZDwQ/dVzs54fk4EU6sqJtwwzQEy3f2UNVWgX7QS0DWFkX6tUAcg4hfzXhYTHeEXICes5qnmPs6RkFG2Px5h/GBsbabYoxpcxAp2+MnTOd1gM+GVCTei+86y8/MeExqqaD+hjY/3fEQjy/RXX0v+pkkP5fq8gnYI8DfuplfcbI7B5cKbyBfhveg/HZb3jdRcrXlJeGbEdSrbvnoBWyKeEBdFJVa59/aapDEfoVoPqOnXAq+gGRj0JFH/IvcNdnCe8QBBWa5IUGMxpwiJCpISupXQwZTWYaEjq1zkqY82kgq1NNUFUkPcijk9Vub5AditS70nz2Yd73H4yjFmNokfVqd+O+w3e0dWeshl1vnrclG+546kX3fNybkUT8gw6P52yDDRct+9ue5sIpFW4lDKZeo6U0Q2eNzNBKh9/dZwE9/u6b7IEY8+Ocy0pXX0=
