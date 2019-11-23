@@ -88,13 +88,13 @@
     "webpack": "4.29.6",
     "webpack-cli": "3.3.0",
     "webpack-dev-server": "3.2.1",
-    "yarn": "1.15.2"
+    "yarn": "1.19.2"
   },
   "resolutions": {
     "core-js": "3.1.4"
   },
   "scripts": {
-    "install:yarn": "npm install yarn@1.15.2 -g",
+    "install:yarn": "npm install yarn@1.19.2 -g",
     "tools": "npm run install:yarn",
     "test": "jest --config jestconfig.json --no-cache",
     "testc": "jest --config jestconfig.json --no-cache --coverage --coverageDirectory=./coverage",
