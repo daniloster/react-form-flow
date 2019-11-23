@@ -2,12 +2,12 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, text, number } from '@storybook/addon-knobs';
 import withLayout from './withLayout';
-import getingStated from '../docs/markdown/GETTING_STARTED.md';
-import recipesValidations from '../docs/markdown/RECIPES_VALIDATIONS.md';
-import checkboxField from '../docs/markdown/RECIPES_CHECKBOX.md';
-import dropdownField from '../docs/markdown/RECIPES_DROPDOWN.md';
-import inputField from '../docs/markdown/RECIPES_INPUT.md';
-import radioField from '../docs/markdown/RECIPES_RADIO.md';
+import getingStated from '../markdown/GETTING_STARTED.md';
+import recipesValidations from '../markdown/RECIPES_VALIDATIONS.md';
+import checkboxField from '../markdown/RECIPES_CHECKBOX.md';
+import dropdownField from '../markdown/RECIPES_DROPDOWN.md';
+import inputField from '../markdown/RECIPES_INPUT.md';
+import radioField from '../markdown/RECIPES_RADIO.md';
 import addressBook from '../react-form-flow-examples/AddressBook/ADDRESS_BOOK.md';
 
 import AppInteractive from './AppInteractive';

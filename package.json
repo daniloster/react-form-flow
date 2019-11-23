@@ -7,7 +7,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">6.0.0"
+    "node": ">8.15.1 || >9.11.2"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -63,8 +63,7 @@
     "handlebars": "4.0.14",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
-    "img-loader": "3.0.1",
-    "jest": "24.8.0",
+    "jest": "24.9.0",
     "jsdom": "14.0.0",
     "json-loader": "0.5.7",
     "moment": "^2.24.0",
@@ -72,14 +71,12 @@
     "prettier": "1.16.4",
     "prop-types": "15.7.2",
     "react": "16.8.4",
-    "react-addons-test-utils": "15.6.2",
     "react-docgen": "4.1.0",
     "react-docgen-displayname-handler": "2.1.1",
     "react-dom": "16.8.4",
     "react-styleguidist": "9.0.4",
     "react-test-renderer": "16.8.4",
     "recast": "0.17.4",
-    "rsg-components": "3.0.0",
     "sinon": "7.3.0",
     "source-map-loader": "0.2.4",
     "source-map-support": "0.5.11",
@@ -91,24 +88,26 @@
     "webpack": "4.29.6",
     "webpack-cli": "3.3.0",
     "webpack-dev-server": "3.2.1",
-    "yarn": "1.17.3"
+    "yarn": "1.15.2"
   },
   "resolutions": {
     "core-js": "3.1.4"
   },
   "scripts": {
-    "install:yarn": "npm install yarn@$(cat package.json | grep \"yarn\" | awk '{print $2}' | cut -d'\"' -f2) -g",
+    "install:yarn": "npm install yarn@1.15.2 -g",
     "tools": "npm run install:yarn",
     "test": "jest --config jestconfig.json --no-cache",
     "testc": "jest --config jestconfig.json --no-cache --coverage --coverageDirectory=./coverage",
     "test:watch": "npm run test -- --watch",
     "prebuild": "rm -rf lib/ && mkdir -p lib",
-    "validate": "npm run test && npm run coverage && npm run check-coverage",
+    "lint": "eslint src --config ./.eslintrc.json --ignore-path ./.eslintignore",
+    "validate": "npm run lint && npm run test && npm run testc",
     "build": "babel src --out-dir lib --copy-files --source-maps",
     "prepublish": "npm run build",
     "lint:fix": "eslint --fix src --config ./.eslintrc.json --ignore-path ./.eslintignore",
     "lint": "eslint src --config ./.eslintrc.json --ignore-path ./.eslintignore",
     "doc": "react-docgen ./src --ignore node_modules,lib,dist,docs,DEV,coverage,mochawesome-reports,mochawesome-report,webpack.config.js,src/__test__ -e **/*.spec.js --resolver findAllComponentDefinitions --pretty | ./tools/docs/generateDocs.sh",
-    "storybook": "start-storybook --port 8080"
+    "storybook": "start-storybook --port 8080",
+    "build:storybook": "build-storybook -c .storybook -o docs"
   }
 }

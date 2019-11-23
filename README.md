@@ -25,6 +25,7 @@ Manage your form through a minimal minimal structure for capturing and validatin
 ## Peer dependencies
 
 ```js static
+"mutation-helper": "^1.0.0",
 "prop-types": "^15.7.2",
 "react": "^16.8.4",
 "uuid": "^3.3.2"
@@ -46,6 +47,6 @@ yarn add react-form-flow
 
 ## Documentation
 
-- [Getting started](./docs/markdown/GETTING_STARTED.md)
-- [Recipes: Factory for validations](./docs/markdown/RECIPES_VALIDATIONS.md)
-- [Recipes: Input Field](./docs/markdown/RECIPES_INPUT.md)
+- [Getting started](./markdown/GETTING_STARTED.md)
+- [Recipes: Factory for validations](./markdown/RECIPES_VALIDATIONS.md)
+- [Recipes: Input Field](./markdown/RECIPES_INPUT.md)
