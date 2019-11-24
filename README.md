@@ -50,3 +50,6 @@ yarn add react-form-flow
 - [Getting started](https://github.com/daniloster/react-form-flow/blob/master/markdown/GETTING_STARTED.md)
 - [Recipes: Factory for validations](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_VALIDATIONS.md)
 - [Recipes: Input Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_INPUT.md)
+- [Recipes: Checkbox Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_CHECKBOX.md)
+- [Recipes: Dropdown Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_DROPDOWN.md)
+- [Recipes: Radio Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_RADIO.md)
