@@ -47,6 +47,6 @@ yarn add react-form-flow
 
 ## Documentation
 
-- [Getting started](./markdown/GETTING_STARTED.md)
-- [Recipes: Factory for validations](./markdown/RECIPES_VALIDATIONS.md)
-- [Recipes: Input Field](./markdown/RECIPES_INPUT.md)
+- [Getting started](https://github.com/daniloster/react-form-flow/blob/master/markdown/GETTING_STARTED.md)
+- [Recipes: Factory for validations](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_VALIDATIONS.md)
+- [Recipes: Input Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_INPUT.md)
