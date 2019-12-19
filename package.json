@@ -3,11 +3,14 @@
   "version": "0.0.4",
   "main": "lib/index.js",
   "license": "MIT",
+  "repository": "https://github.com/daniloster/react-form-flow.git",
+  "homepage": "https://codeinbox.me/react-form-flow",
+  "author": "Danilo Castro <daniloster@gmail.com>",
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">8.15.1 || >9.11.2"
+    "node": ">=8.15.1 || >=9.11.2"
   },
   "dependencies": {},
   "peerDependencies": {
