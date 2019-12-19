@@ -1,9 +1,10 @@
 # react-form-flow
 
-Manage your form through a minimal minimal structure for capturing and validating form data.
+Manage your form through a small structure for capturing and validating form data.
 
 [![NPM](https://img.shields.io/npm/v/react-form-flow.svg?style=flat-square) ![NPM](https://img.shields.io/npm/dm/react-form-flow.svg?style=flat-square)](https://www.npmjs.com/package/react-form-flow)
-[![Build Status](https://img.shields.io/travis/daniloster/react-form-flow/master.svg?style=flat-square)](https://travis-ci.org/daniloster/react-form-flow)
+[![Build Status](https://travis-ci.com/daniloster/react-form-flow.svg?branch=master)](https://travis-ci.com/daniloster/react-form-flow)
+[![minizipped size](https://flat.badgen.net/bundlephobia/minzip/react-form-flow)](https://bundlephobia.com/result?p=react-form-flow@latest)
 
 ## Docs
 
