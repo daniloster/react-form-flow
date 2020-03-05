@@ -1,5 +1,7 @@
-import { useCallback, useMemo } from 'react';
 import { get } from 'mutation-helper';
+import { useCallback, useContext, useMemo } from 'react';
+import FormFlowDataContext from './FormFlowDataContext';
+import { useObservableState } from './react-state';
 import useFormFlow from './useFormFlow';
 import useFormFlowValidation from './useFormFlowValidation';
 
@@ -9,7 +11,20 @@ import useFormFlowValidation from './useFormFlowValidation';
  * @returns {React.Context}
  */
 export default function useFormFlowItem(path) {
-  const { data, onChangeByPath, setData } = useFormFlow();
+  const observableState = useContext(FormFlowDataContext);
+  const [metadata, setMetadata] = useObservableState(observableState);
+  const { validations } = useFormFlowValidation(path);
+  const { onChangeByPath } = useFormFlow();
+  const data = metadata.values;
+  const setData = useCallback(
+    values => {
+      setMetadata(oldMetadata => ({
+        ...oldMetadata,
+        values,
+      }));
+    },
+    [setMetadata]
+  );
   const onChangeValue = useCallback(
     value => {
       onChangeByPath(path, value);
@@ -23,7 +38,6 @@ export default function useFormFlowItem(path) {
     [path, onChangeByPath]
   );
   const value = useMemo(() => (path ? get(data, path) : data), [data, path]);
-  const { validations } = useFormFlowValidation(path);
 
   return {
     data,

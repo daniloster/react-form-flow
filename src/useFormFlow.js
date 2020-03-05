@@ -1,33 +1,30 @@
-import { useContext, useCallback } from 'react';
 import { set } from 'mutation-helper';
+import { useCallback, useContext } from 'react';
 import FormFlowDataContext from './FormFlowDataContext';
+import FormFlowValidationContext from './FormFlowValidationContext';
+import updateValidationsByTriggerJsonPath from './updateValidationsByTriggerJsonPath';
 
 /**
  * Creates a memoized Provider component to be used as form
  * @returns {React.Context}
  */
 export default function useFormFlow() {
-  const [data, setData] = useContext(FormFlowDataContext);
-  // const dataRef = useRef(data);
-  // useEffect(() => {
-  //   dataRef.current = data;
-  // }, [data]);
+  const observableStateValidation = useContext(FormFlowValidationContext);
+  const observableState = useContext(FormFlowDataContext);
   const onChangeByPath = useCallback(
     (path, value) => {
-      setData(oldData => {
-        const newData = set(oldData, path, value);
-
+      observableState.set(oldData => {
+        const newData = set(oldData, `values.${path}`, value);
+        updateValidationsByTriggerJsonPath(observableStateValidation, newData.values, path);
         return newData;
       });
-      // dataRef.current = set(dataRef.current, path, value);
-      // setData(dataRef.current);
     },
-    [setData]
+    [observableState, observableStateValidation]
   );
 
   return {
-    data,
+    data: observableState.get(),
     onChangeByPath,
-    setData,
+    setData: observableState.set,
   };
 }

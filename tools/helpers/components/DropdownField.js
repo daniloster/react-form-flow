@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
+import React, { useCallback, useRef } from 'react';
 import styled from 'styled-components';
+import uuid from 'uuid';
 import Validation from './Validation';
 
 const DropdownFieldLayout = styled.div`

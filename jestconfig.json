@@ -1,12 +1,16 @@
 {
   "cacheDirectory": "./jest-cache",
-  "testMatch": ["<rootDir>/test/*.spec.js", "<rootDir>/test/**/*.spec.js"],
-  "testPathIgnorePatterns": [],
-  "moduleFileExtensions": ["js", "json"],
-  "coverageReporters": ["html", "json", "text"],
-  "coveragePathIgnorePatterns": [],
-  "coverageDirectory": "<rootDir>/build/coverage",
-  "collectCoverageFrom": ["src/**/*.js"],
+  "coverageReporters": [
+    "html",
+    "json",
+    "lcov",
+    "text"
+  ],
+  "coverageDirectory": "<rootDir>/build/coverage/",
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "src/**/*.js"
+  ],
   "coverageThreshold": {
     "global": {
       "branches": 90,
@@ -15,6 +19,30 @@
       "statements": 90
     }
   },
-  "setupFilesAfterEnv": ["<rootDir>/tools/helpers/jest.js"],
+  "moduleFileExtensions": [
+    "js",
+    "json"
+  ],
+  "modulePathIgnorePatterns": [
+    "<rootDir>/build/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/tools"
+  ],
+  "setupFiles": [
+    "<rootDir>/tools/helpers/jest.setup.js"
+  ],
+  "setupFilesAfterEnv": [
+    "<rootDir>/tools/helpers/jest.setup.afterEnv.js"
+  ],
+  "testMatch": [
+    "<rootDir>/test/*.spec.js",
+    "<rootDir>/test/**/*.spec.js"
+  ],
+  "testPathIgnorePatterns": [
+    "<rootDir>/build/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/tools/"
+  ],
+  "testEnvironment": "jsdom",
   "verbose": false
 }

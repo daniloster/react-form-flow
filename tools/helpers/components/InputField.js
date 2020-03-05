@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
+import uuid from 'uuid';
 import Validation from './Validation';
 
 const InputFieldLayout = styled.div`
@@ -14,8 +14,11 @@ const InputFieldLayout = styled.div`
   }
 `;
 
-export default function InputField({ label: labelText, onChange, validations, value }) {
+export default React.memo(InputField);
+
+function InputField({ label: labelText, onChange, validations, value }) {
   const id = useRef(uuid.v4());
+
   return (
     <InputFieldLayout>
       <label htmlFor={id.current}>

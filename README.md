@@ -28,8 +28,7 @@ Manage your form through a small structure for capturing and validating form dat
 ```js static
 "mutation-helper": "^1.0.0",
 "prop-types": "^15.7.2",
-"react": "^16.8.4",
-"uuid": "^3.3.2"
+"react": "^16.8.4"
 ```
 
 ## Consuming

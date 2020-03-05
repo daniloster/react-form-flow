@@ -1,9 +1,9 @@
 import React from 'react';
 // eslint-disable-next-line
 import styled from 'styled-components';
-import { FormFlowProvider, useFormFlowItem, useFormFlowValidation } from '../src';
-import Validation from '../tools/helpers/components/Validation';
+import { FormFlowProvider, useFormFlowItem, useFormFlowValidation, useResetForm, useSubmitForm } from '../src';
 import InputField from '../tools/helpers/components/InputField';
+import Validation from '../tools/helpers/components/Validation';
 
 const Layout = styled.div`
   height: 100%;
@@ -30,18 +30,30 @@ function Validations() {
 function Form() {
   const nameField = useFormFlowItem('name');
   const descriptionField = useFormFlowItem('description');
+  const submissionProps = useSubmitForm(data => {
+    console.log(data);
+  });
+  const resetProps = useResetForm();
 
   return (
-    <div>
+    <form {...submissionProps} {...resetProps}>
       <InputField label="Name" {...nameField} />
       <InputField label="Description" {...descriptionField} />
-    </div>
+      <button type="reset">Reset</button>
+      <button type="submit">Submit</button>
+    </form>
   );
 }
 
 export default ({ schemaData }) => (
   <Layout>
-    <FormFlowProvider initialData={{}} schemaData={schemaData}>
+    <FormFlowProvider
+      initialData={{}}
+      schemaData={schemaData}
+      onSubmit={async data => {
+        console.log(data);
+      }}
+    >
       <Validations />
       <Form />
     </FormFlowProvider>

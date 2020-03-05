@@ -22,7 +22,7 @@ export default function Validation({ isColored = false, label, validations = [] 
       {validations.map(
         ({ key, isValid, message }) =>
           !isValid && (
-            <div className="ValidationLayout__message" key={key}>
+            <div className="ValidationLayout__message" role="validation" key={key}>
               {message}
             </div>
           )
