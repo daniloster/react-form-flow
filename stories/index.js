@@ -1,23 +1,23 @@
-import React from 'react';
+import { number, text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
-import { withKnobs, text, number } from '@storybook/addon-knobs';
-import withLayout from './withLayout';
+import React from 'react';
 import getingStated from '../markdown/GETTING_STARTED.md';
-import recipesValidations from '../markdown/RECIPES_VALIDATIONS.md';
 import checkboxField from '../markdown/RECIPES_CHECKBOX.md';
 import dropdownField from '../markdown/RECIPES_DROPDOWN.md';
 import inputField from '../markdown/RECIPES_INPUT.md';
 import radioField from '../markdown/RECIPES_RADIO.md';
+import recipesValidations from '../markdown/RECIPES_VALIDATIONS.md';
+import AddressBook from '../react-form-flow-examples/AddressBook';
 import addressBook from '../react-form-flow-examples/AddressBook/ADDRESS_BOOK.md';
-
 import AppInteractive from './AppInteractive';
-import RecipesValidationsInteractive from './RecipesValidationsInteractive';
-import FormFields from './FormFields';
+import AppRelatedPathInvalidation from './AppRelatedPathInvalidation';
 import CheckboxFieldRecipe from './CheckboxFieldRecipe';
 import DropdownFieldRecipe from './DropdownFieldRecipe';
+import FormFields from './FormFields';
 import InputFieldRecipe from './InputFieldRecipe';
 import RadioFieldRecipe from './RadioFieldRecipe';
-import AddressBook from '../react-form-flow-examples/AddressBook';
+import RecipesValidationsInteractive from './RecipesValidationsInteractive';
+import withLayout from './withLayout';
 
 storiesOf('Form', module)
   .addDecorator(withKnobs)
@@ -54,7 +54,8 @@ storiesOf('Form', module)
     {
       notes: { markdown: addressBook },
     }
-  );
+  )
+  .add('Path Invalidation', () => <AppRelatedPathInvalidation key="AppRelatedPathInvalidation" />);
 
 storiesOf('Recipes', module)
   .addDecorator(withKnobs)

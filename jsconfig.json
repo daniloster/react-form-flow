@@ -2,6 +2,11 @@
   "compilerOptions": {
     "experimentalDecorators": true
   },
-  "include": ["src/**/*", "test/FormFlowProvider.spec.js"],
-  "exclude": ["**/node_modules"]
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ]
 }

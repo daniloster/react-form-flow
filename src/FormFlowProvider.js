@@ -1,44 +1,40 @@
-import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useEffect, useMemo, useRef } from 'react';
 import FormFlowDataContext from './FormFlowDataContext';
 import FormFlowValidationContext from './FormFlowValidationContext';
-import useFormFlowValidation from './useFormFlowValidation';
-import { interpolatePaths } from './validationUtils';
+import { ObservableState } from './react-state';
 import { SchemaDataShape } from './shapes';
+import validate from './validate';
 
-function Validate({ path }) {
-  useFormFlowValidation(path);
+function FormFlowProvider({ children, initialData, schemaData }) {
+  const initialDataRef = useRef(initialData);
+  const schemaDataRef = useRef(schemaData);
+  const observableState = useMemo(
+    () =>
+      ObservableState.create({
+        initialValues: initialDataRef.current,
+        values: initialDataRef.current,
+      }),
+    []
+  );
+  const observableStateValidations = useMemo(
+    () =>
+      ObservableState.create({
+        allPaths: [],
+        allValidations: [],
+        byPath: {},
+        invalidationRules: {},
+      }),
+    []
+  );
 
-  return null;
-}
-
-Validate.propTypes = {
-  /**
-   * JsonPath to validate in the form
-   */
-  path: PropTypes.string.isRequired,
-};
-
-export default function FormFlowProvider({ children, initialData, schemaData }) {
-  const dataState = useState(initialData);
-  const [data] = dataState;
-  const validationState = useMemo(() => [schemaData, {}], [schemaData]);
-  const allPaths = useMemo(() => interpolatePaths(schemaData, data), [schemaData, data]);
-
-  /**
-   * Basically, we need to clear out the pre-existing validation as it can only
-   * be trigger by data or schemaData changes which would invalidate the form validations.
-   */
-  validationState[1].allPaths = allPaths;
-  validationState[1].allValidations = [];
-  validationState[1].byPath = {};
+  useEffect(() => {
+    observableStateValidations.set(() => validate(schemaDataRef.current, initialDataRef.current));
+  }, [observableStateValidations]);
 
   return (
-    <FormFlowDataContext.Provider value={dataState}>
-      <FormFlowValidationContext.Provider value={validationState}>
-        {allPaths.map(path => (
-          <Validate key={path} path={path} />
-        ))}
+    <FormFlowDataContext.Provider value={observableState}>
+      <FormFlowValidationContext.Provider value={observableStateValidations}>
         {children}
       </FormFlowValidationContext.Provider>
     </FormFlowDataContext.Provider>
@@ -59,3 +55,5 @@ FormFlowProvider.propTypes = {
    */
   schemaData: PropTypes.objectOf(SchemaDataShape).isRequired,
 };
+
+export default React.memo(FormFlowProvider);
