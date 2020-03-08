@@ -1,6 +1,5 @@
 import { useCallback, useContext } from 'react';
 import FormFlowDataContext from './FormFlowDataContext';
-import FormFlowValidationContext from './FormFlowValidationContext';
 import isValidByPaths from './isValidByPaths';
 
 /**
@@ -16,20 +15,22 @@ import isValidByPaths from './isValidByPaths';
  */
 export default function useSubmitForm(submit) {
   const observableState = useContext(FormFlowDataContext);
-  const observableStateValidations = useContext(FormFlowValidationContext);
   const onSubmit = useCallback(
     async e => {
       e.preventDefault();
-      const { values } = observableState.get();
-      const validationsMetadata = observableStateValidations.get();
-      const { allValidations } = validationsMetadata;
+      const { values, validationsState } = observableState.get();
+      const { allValidations } = validationsState;
       const isValid = isValidByPaths(allValidations);
+      observableState.set(oldData => ({
+        ...oldData,
+        submitCount: oldData.submitCount + 1,
+      }));
 
-      await submit(values, { ...validationsMetadata, isValid });
+      await submit(values, { ...validationsState, isValid });
 
       return false;
     },
-    [observableState, observableStateValidations, submit]
+    [observableState, submit]
   );
 
   return { onSubmit };
