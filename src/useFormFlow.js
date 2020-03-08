@@ -10,14 +10,27 @@ export default function useFormFlow() {
   const observableState = useContext(FormFlowDataContext);
   const onBlurByPath = useCallback(
     path => {
-      observableState.set(oldData => set(oldData, `touched.${path}`, true));
+      observableState.set(oldData => {
+        const isTouched = get(oldData, `touched.${path}`);
+        if (!isTouched) {
+          return set(oldData, `touched.${path}`, true);
+        }
+
+        return oldData;
+      });
     },
     [observableState]
   );
   const onChangeByPath = useCallback(
     (path, value) => {
       observableState.set(oldData => {
-        const isDirty = (get(oldData, `values.${path}`) || '') !== value;
+        const oldValue = get(oldData, `values.${path}`);
+        const isDirtyOld = get(oldData, `dirty.${path}`);
+        const isDirty = (oldValue || '') !== value;
+        if (oldValue === value && isDirtyOld === isDirty) {
+          return oldData;
+        }
+
         return set(set(oldData, `dirty.${path}`, isDirty), `values.${path}`, value);
       });
     },
