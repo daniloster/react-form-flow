@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import FormFlowProvider, { createValidations, useFormFlowItem } from '../src';
+import FormFlowProvider, { createValidations, useFormFlowField, useFormFlowItem } from '../src';
 import createRequiredListValidation from '../tools/helpers/components/createRequiredListValidation';
 import createRequiredValidation from '../tools/helpers/components/createRequiredValidation';
 import DropdownField from '../tools/helpers/components/DropdownField';
@@ -41,36 +41,52 @@ const initialData = {
   ],
 };
 
-function Contact({ index }) {
-  const typeField = useFormFlowItem(`contacts[${index}].type`);
-  const valueField = useFormFlowItem(`contacts[${index}].value`);
-  const options = useRef(['email', 'phone']);
-  const byPass = useCallback(item => item, []);
+function Contact({ index, setContacts, contacts }) {
+  const typeField = useFormFlowField(`contacts[${index}].type`, { eventType: 'value' });
+  const valueField = useFormFlowField(`contacts[${index}].value`);
+  const options = useRef(['', 'email', 'phone']);
+  const byPass = useCallback(item => item || '', []);
 
   return (
     <div className="Contact__item">
       <DropdownField
-        {...typeField}
+        {...typeField.field}
+        validations={typeField.errors}
         options={options.current}
         formatText={byPass}
         formatValue={byPass}
         label="Type"
       />
-      <InputField {...valueField} label="Contact" />
+      <InputField {...valueField.field} validations={valueField.errors} label="Contact" />
+      <button
+        type="button"
+        onClick={() => setContacts(contacts.filter((_, indexContact) => indexContact !== index))}
+      >
+        Remove
+      </button>
     </div>
   );
 }
 
 function CustomForm() {
   const nameField = useFormFlowItem('name');
-  const { value: contacts = [] } = useFormFlowItem('contacts');
+  const { data, value: contacts = [], onChangeValue } = useFormFlowItem('contacts');
 
   return (
     <div>
       <InputField {...nameField} label="Name" />
       {contacts.map((_, index) => (
-        <Contact key={`contact-${index}`} index={index} />
+        <Contact
+          key={`contact-${index}`}
+          index={index}
+          setContacts={onChangeValue}
+          contacts={contacts}
+        />
       ))}
+      <button type="button" onClick={() => onChangeValue(contacts.concat({}))}>
+        Add
+      </button>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }

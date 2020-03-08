@@ -1,42 +1,43 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
+import EvaluateValidations from './EvaluateValidations';
 import FormFlowDataContext from './FormFlowDataContext';
-import FormFlowValidationContext from './FormFlowValidationContext';
+import isValidByPaths from './isValidByPaths';
 import { ObservableState } from './react-state';
 import { SchemaDataShape } from './shapes';
-import validate from './validate';
 
-function FormFlowProvider({ children, initialData, schemaData }) {
+function FormFlowProvider({ children, initialData, schemaData, isSubmitted = false }) {
   const initialDataRef = useRef(initialData);
   const schemaDataRef = useRef(schemaData);
   const observableState = useMemo(
     () =>
       ObservableState.create({
+        submitCount: isSubmitted ? 1 : 0,
+        dirty: {},
         initialValues: initialDataRef.current,
+        schemaData: schemaDataRef.current,
+        touched: {},
         values: initialDataRef.current,
+        validationsState: {
+          allPaths: [],
+          allValidations: [],
+          byPath: {},
+        },
       }),
-    []
+    [isSubmitted]
   );
-  const observableStateValidations = useMemo(
-    () =>
-      ObservableState.create({
-        allPaths: [],
-        allValidations: [],
-        byPath: {},
-        invalidationRules: {},
-      }),
-    []
+  observableState.get().validationsState.isAllValid = useCallback(
+    paths => {
+      const { allValidations } = observableState.get().validationsState;
+      return isValidByPaths(allValidations, paths);
+    },
+    [observableState]
   );
-
-  useEffect(() => {
-    observableStateValidations.set(() => validate(schemaDataRef.current, initialDataRef.current));
-  }, [observableStateValidations]);
 
   return (
     <FormFlowDataContext.Provider value={observableState}>
-      <FormFlowValidationContext.Provider value={observableStateValidations}>
-        {children}
-      </FormFlowValidationContext.Provider>
+      <EvaluateValidations />
+      {children}
     </FormFlowDataContext.Provider>
   );
 }
@@ -50,6 +51,10 @@ FormFlowProvider.propTypes = {
    * The initial form data
    */
   initialData: PropTypes.shape({}).isRequired,
+  /**
+   * Indicates when the data has been created or there was an attempt to create it
+   */
+  isSubmitted: PropTypes.bool,
   /**
    * The object with validation rules per field
    */

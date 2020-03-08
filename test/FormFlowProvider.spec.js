@@ -1,6 +1,7 @@
 import { fireEvent, render, waitForElement } from '@testing-library/react';
 import React, { useCallback, useRef } from 'react';
 import { createValidations, FormFlowProvider, useFormFlowItem, useFormFlowValidation } from '../src';
+import useFormFlowField from '../src/useFormFlowField';
 import createRequiredListValidation from '../tools/helpers/components/createRequiredListValidation';
 import createRequiredValidation from '../tools/helpers/components/createRequiredValidation';
 import DropdownField from '../tools/helpers/components/DropdownField';
@@ -10,14 +11,14 @@ import schemaDataPerson from '../tools/helpers/components/schemaDataPerson';
 import Validation from '../tools/helpers/components/Validation';
 
 function PersonForm() {
-  const nameField = useFormFlowItem('name');
-  const ageField = useFormFlowItem('age');
+  const name = useFormFlowField('name');
+  const age = useFormFlowField('age');
   const { value, data } = useFormFlowItem();
 
   return (
     <div>
-      <InputField {...nameField} label="Name" />
-      <InputField {...ageField} label="Age" />
+      <InputField {...name.field} validations={name.errors} label="Name" />
+      <InputField {...age.field} validations={age.errors} label="Age" />
       <span data-testid="is-same">{value === data ? 'same' : 'different'}</span>
     </div>
   );
@@ -35,7 +36,7 @@ function mountComponent(customProps = {}) {
   };
   const Children = CustomChildren || PersonForm;
 
-  const wrapper = render(<FormFlowProvider children={<Children />} {...props} />);
+  const wrapper = render(<FormFlowProvider {...props}><Children /></FormFlowProvider>);
 
   return {
     wrapper,
@@ -47,7 +48,7 @@ describe('<FormFlowProvider />', () => {
   test('FormFlowProvider give access to data and value of a json path by using useFormFlowItem', async () => {
     const scenario = mountComponent();
     const validations = (await scenario.wrapper.getAllByRole('validation'));
-    expect(validations.length).toBe(2);
+    expect(validations.length).toBe(2); // useFormFlowField filters validations only returning errors
     expect(validations[0].textContent).toBe('Name is required!');
     expect(validations[1].textContent).toBe('Age is required!');
   });
@@ -91,32 +92,35 @@ describe('<FormFlowProvider />', () => {
   };
 
   function Contact({ index }) {
-    const typeField = useFormFlowItem(`contacts[${index}].type`);
-    const valueField = useFormFlowItem(`contacts[${index}].value`);
+    const type = useFormFlowField(`contacts[${index}].type`, { eventType: 'value' });
+    const value = useFormFlowField(`contacts[${index}].value`);
     const options = useRef(['email', 'phone']);
     const byPass = useCallback(item => item, []);
 
     return (
       <div className="Contact__item">
         <DropdownField
-          {...typeField}
+          {...type.field}
+          dirty={type.dirty}
+          touched={type.touched}
+          validations={type.errors}
           options={options.current}
           formatText={byPass}
           formatValue={byPass}
           label="Type"
         />
-        <InputField {...valueField} label="Contact" />
+        <InputField {...value.field} validations={value.errors} label="Contact" />
       </div>
     );
   }
 
   function CustomForm() {
-    const nameField = useFormFlowItem('name');
+    const name = useFormFlowField('name');
     const { value: contacts = [] } = useFormFlowItem('contacts');
 
     return (
       <div>
-        <InputField {...nameField} label="Name" />
+        <InputField {...name.field} validations={name.errors} label="Name" />
         {contacts.map((_, index) => (
           <Contact key={`contact-${index}`} index={index} />
         ))}
@@ -128,12 +132,6 @@ describe('<FormFlowProvider />', () => {
 
     test('useFormFlowValidation would recompute validation after changing the related properties', async () => {
       const scenario = mountComponent({ schemaData, initialData, CustomChildren: CustomForm });
-      try {
-        await scenario.wrapper.getAllByRole('validation')
-        expect(true).toBeFalsy()
-      } catch {
-        expect(true).toBeTruthy()
-      }
       fireEvent.change(
         scenario.wrapper.container.querySelectorAll('.Contact__item select')[2],
         { target: { value: 'email' } }
@@ -164,12 +162,12 @@ describe('<FormFlowProvider />', () => {
 
     test('useFormFlowValidation would not return validations for path out of the schemaData', async () => {
       function CustomFormExtraField() {
-        const ageField = useFormFlowItem('age');
+        const age = useFormFlowField('age');
 
         return (
           <div>
             <CustomForm />
-            <InputField {...ageField} label="Age" />
+            <InputField {...age.field} validations={age.errors} label="Age" />
           </div>
         );
       }
@@ -188,12 +186,12 @@ describe('<FormFlowProvider />', () => {
 
     test('useFormFlowValidation would not return validations for path out of the schemaData', async () => {
       function CustomFormExtraField() {
-        const ageField = useFormFlowItem('age');
+        const age = useFormFlowField('age');
 
         return (
           <div>
             <CustomForm />
-            <InputField {...ageField} label="Age" />
+            <InputField {...age.field} validations={age.errors} label="Age" />
           </div>
         );
       }
@@ -214,12 +212,12 @@ describe('<FormFlowProvider />', () => {
       let scenario;
 
       function CustomFormExtraField() {
-        const ageField = useFormFlowItem('age');
+        const age = useFormFlowField('age');
 
         return (
           <div>
             <CustomForm />
-            <InputField {...ageField} label="Age" />
+            <InputField {...age.field} validations={age.errors} label="Age" />
           </div>
         );
       }
@@ -313,12 +311,12 @@ describe('<FormFlowProvider />', () => {
 
     test('useFormFlowValidation would not return validations for path out of the schemaData', async () => {
       function CustomFormExtraField() {
-        const ageField = useFormFlowItem('age');
+        const age = useFormFlowField('age');
 
         return (
           <div>
             <CustomForm />
-            <InputField {...ageField} label="Age" />
+            <InputField {...age.field} validations={age.errors} label="Age" />
           </div>
         );
       }
@@ -334,6 +332,43 @@ describe('<FormFlowProvider />', () => {
         expect(true).toBeTruthy()
       }
     });
+  });
+
+  describe('Using touched', () => {
+    test('if Form will display the error only when touched', async () => {
+      function CustomFormExtraField() {
+        const name = useFormFlowField('name');
+
+        return (
+          <div>
+            <InputField
+              {...name.field}
+              touched={name.touched}
+              validations={name.errors}
+              label="Name"
+            />
+          </div>
+        );
+      }
+      const scenario = mountComponent({
+        schemaData,
+        initialData: {
+          name: '',
+        },
+        CustomChildren: CustomFormExtraField,
+      });
+      try {
+        await scenario.wrapper.getAllByRole('validation');
+        expect(true).toBeFalsy();
+      } catch {
+        expect(true).toBeTruthy();
+      }
+      // Blur on name
+      fireEvent.blur(scenario.wrapper.container.querySelector('input'));
+      // Erros for name
+      const errors = await waitForElement(() => scenario.wrapper.getAllByRole('validation'));
+      expect(errors).toHaveLength(1);
+    })
   });
 
   describe('Using isAllValid', () => {

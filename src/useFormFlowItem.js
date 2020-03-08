@@ -13,8 +13,8 @@ import useFormFlowValidation from './useFormFlowValidation';
 export default function useFormFlowItem(path) {
   const observableState = useContext(FormFlowDataContext);
   const [metadata, setMetadata] = useObservableState(observableState);
-  const { validations } = useFormFlowValidation(path);
-  const { onChangeByPath } = useFormFlow();
+  const { validations, touched, dirty, submitted } = useFormFlowValidation(path);
+  const { onChangeByPath, onBlurByPath } = useFormFlow();
   const data = metadata.values;
   const setData = useCallback(
     values => {
@@ -31,19 +31,26 @@ export default function useFormFlowItem(path) {
     },
     [path, onChangeByPath]
   );
+  const onBlur = useCallback(() => {
+    onBlurByPath(path);
+  }, [onBlurByPath, path]);
   const onChange = useCallback(
     e => {
       onChangeByPath(path, e.target.value);
     },
-    [path, onChangeByPath]
+    [onChangeByPath, path]
   );
   const value = useMemo(() => (path ? get(data, path) : data), [data, path]);
 
   return {
     data,
+    dirty,
+    onBlur,
     onChangeValue,
     onChange,
     setData,
+    submitted,
+    touched,
     validations,
     value,
   };

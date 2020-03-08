@@ -1,7 +1,5 @@
 import { useCallback, useContext, useRef } from 'react';
 import FormFlowDataContext from './FormFlowDataContext';
-import FormFlowValidationContext from './FormFlowValidationContext';
-import validate from './validate';
 
 /**
  * @typedef ResetProps
@@ -15,7 +13,6 @@ import validate from './validate';
  */
 export default function useResetForm() {
   const observableState = useContext(FormFlowDataContext);
-  const observableStateValidations = useContext(FormFlowValidationContext);
   const ref = useRef(null);
   const onReset = useCallback(() => {
     ref.current.reset();
@@ -23,9 +20,7 @@ export default function useResetForm() {
       ...metadata,
       values: metadata.initialValues,
     }));
-    const { initialValues } = observableState.get();
-    observableStateValidations.set(({ schemaData }) => validate(schemaData, initialValues));
-  }, [observableState, observableStateValidations]);
+  }, [observableState]);
 
   return { onReset, ref };
 }

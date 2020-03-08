@@ -19,18 +19,20 @@ const DropdownFieldLayout = styled.div`
   }
 
   .DropdownFieldLayout__validations {
-    display: block;
+    display: ${({ touched }) => (touched ? 'block' : 'none')};
     white-space: nowrap;
   }
 `;
 
 export default function DropdownField({
+  dirty = false,
   empty,
   formatText,
   formatValue,
   label: labelText,
   onChangeValue,
   options,
+  touched = true,
   validations,
   value,
 }) {
@@ -39,13 +41,13 @@ export default function DropdownField({
     e => {
       const { value: optionValue } = e.target;
 
-      onChangeValue(options.find(option => formatValue(option) === optionValue) || null);
+      onChangeValue(options.find(option => formatValue(option) === optionValue) || '');
     },
     [formatValue, onChangeValue, options]
   );
 
   return (
-    <DropdownFieldLayout>
+    <DropdownFieldLayout dirty={dirty} touched={touched}>
       <label htmlFor={id.current}>
         <span>{labelText}</span>
         <select onChange={onChange} value={formatValue(value)}>
@@ -71,12 +73,14 @@ export default function DropdownField({
 }
 
 DropdownField.propTypes = {
+  dirty: PropTypes.bool,
   empty: PropTypes.oneOf([PropTypes.any]),
   formatText: PropTypes.func.isRequired,
   formatValue: PropTypes.func.isRequired,
   label: PropTypes.string,
   onChangeValue: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.any).isRequired,
+  touched: PropTypes.bool,
   validations: PropTypes.arrayOf(PropTypes.shape({})),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
 };
