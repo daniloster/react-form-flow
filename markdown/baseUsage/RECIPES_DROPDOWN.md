@@ -2,10 +2,6 @@
 
 This recipe will show how to build a simple dropdown using the select markup following the interface defined by `react-form-flow`.
 
-The [Code Sandbox Example](https://codesandbox.io/s/dreamy-bird-mnftf) has a simpler implementation of native select using `useFormFlowField`.
-
-[Old Documentation for Dropdown Field Recipe](https://github.com/daniloster/react-form-flow/blob/master/markdown/baseUsage/RECIPES_DROPDOWN.md)
-
 ## Code
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
@@ -24,15 +20,16 @@ const ValidationLayout = styled.section`
   }
 `;
 
-export default function Validation({ errors = [] }) {
+export default function Validation({ validations = [] }) {
   return (
     <ValidationLayout>
       {validations.map(
-        ({ key, message }) =>(
-          <div className="ValidationLayout__message" key={key}>
-            {message}
-          </div>
-        )
+        ({ key, isValid, message }) =>
+          !isValid && (
+            <div className="ValidationLayout__message" key={key}>
+              {message}
+            </div>
+          )
       )}
     </ValidationLayout>
   );
@@ -74,24 +71,24 @@ const DropdownFieldLayout = styled.div`
 
 export default function DropdownField({
   empty,
-  dirty,
-  errors,
-  field,
   formatText,
   formatValue,
   label: labelText,
+  onChangeValue,
   options,
-  submtted,
-  touched,
+  validations,
+  value,
 }) {
   const id = useRef(uuid.v4());
-  const { onBlur, onChangeValue, value = '' } = field;
   const [isVisited, setIsVisited] = useState(false);
   const onChange = useCallback(
     e => {
       const { value: optionValue } = e.target;
 
       onChangeValue(options.find(option => formatValue(option) === optionValue) || null);
+      if (!isVisited) {
+        setIsVisited(true);
+      }
     },
     [formatValue, onChangeValue, options]
   );
@@ -100,7 +97,7 @@ export default function DropdownField({
     <DropdownFieldLayout>
       <label htmlFor={id.current}>
         <span>{labelText}</span>
-        <select onBlur={onBlur} onChange={onChange} value={formatValue(value)}>
+        <select onChange={onChange} value={formatValue(value)}>
           {empty && <option value={formatValue(empty)}>{formatText(empty)}</option>}
           {Boolean(options && options.length) &&
             options.map(option => {
@@ -112,16 +109,28 @@ export default function DropdownField({
         </select>
       </label>
       <div className="DropdownFieldLayout__validations">
-        {(submitted || dirty || touched) && <Validation errors={errors} />}
+        {isVisited && <Validation validations={validations} />}
       </div>
     </DropdownFieldLayout>
   );
 }
 
+DropdownField.propTypes = {
+  empty: PropTypes.oneOf([PropTypes.any]),
+  formatText: PropTypes.func.isRequired,
+  formatValue: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  onChangeValue: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.any).isRequired,
+  validations: PropTypes.arrayOf(PropTypes.shape({})),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+};
+
 DropdownField.defaultProps = {
   empty: null,
   label: null,
-  errors: [],
+  validations: [],
+  value: '',
 };
 ```
 
@@ -132,7 +141,7 @@ After building the Dropdown, see below how to use it.
 ```jsx
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowField } from 'react-form-flow';
+import { useFormFlowItem } from 'react-form-flow';
 import DropdownField from './DropdownField';
 
 const DropdownFieldRecipeLayout = styled.div``;
@@ -161,7 +170,7 @@ function formatText(item) {
 }
 
 export default function DropdownFieldRecipe() {
-  const nationalityField = useFormFlowField('nationality', { eventType: 'value' });
+  const nationalityField = useFormFlowItem('nationality');
 
   return (
     <DropdownFieldRecipeLayout>

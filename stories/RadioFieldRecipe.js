@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowItem } from '../src';
 import RadioField from '../react-form-flow-examples/fields/Radiofield';
+import { useFormFlowField } from '../src';
 
 const RadioFieldRecipeLayout = styled.div``;
 
 export default function RadioFieldRecipe() {
-  const handField = useFormFlowItem('hand');
+  const handField = useFormFlowField('hand');
 
   return (
     <RadioFieldRecipeLayout>
@@ -18,7 +18,7 @@ export default function RadioFieldRecipe() {
         <RadioField {...handField} label="Both" checkedValue="both" name="hand" />
         <span>
           value:
-          {handField.value}
+          {handField.field.value}
         </span>
       </fieldset>
     </RadioFieldRecipeLayout>

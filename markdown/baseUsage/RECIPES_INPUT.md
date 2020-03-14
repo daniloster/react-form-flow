@@ -2,8 +2,6 @@
 
 The idea here is to show how to optimise your performance by reusing a input field.
 
-[Old Documentation for Input Field Recipe](https://github.com/daniloster/react-form-flow/blob/master/markdown/baseUsage/RECIPES_INPUT.md)
-
 ## Code
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
@@ -22,15 +20,16 @@ const ValidationLayout = styled.section`
   }
 `;
 
-export default function Validation({ errors = [] }) {
+export default function Validation({ validations = [] }) {
   return (
     <ValidationLayout>
       {validations.map(
-        ({ key, message }) =>(
-          <div className="ValidationLayout__message" key={key}>
-            {message}
-          </div>
-        )
+        ({ key, isValid, message }) =>
+          !isValid && (
+            <div className="ValidationLayout__message" key={key}>
+              {message}
+            </div>
+          )
       )}
     </ValidationLayout>
   );
@@ -61,31 +60,36 @@ const InputFieldLayout = styled.div`
 `;
 
 export default function InputField(props) {
-  const {
-    errors,
-    field,
-    label: labelText,
-    submitted,
-    touched,
-  } = props
+  const { label: labelText, onChange, validations, value } = props;
   const id = useRef(uuid.v4());
+  const [isVisited, setIsVisited] = useState(false);
+  const onBlur = useCallback(() => {
+    setIsVisited(true);
+  }, []);
 
   return (
     <InputFieldLayout>
       <label htmlFor={id.current}>
         <span>{labelText}</span>
-        <input id={id.current} type="text" {...field} />
+        <input id={id.current} type="text" onBlur={onBlur} onChange={onChange} value={value} />
       </label>
       <div className="InputFieldLayout__validations">
-        {(submitted || touched) && <Validation errors={errors} />}
+        {isVisited && <Validation validations={validations} />}
       </div>
     </InputFieldLayout>
   );
 }
 
+InputField.propTypes = {
+  label: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  validations: PropTypes.arrayOf(PropTypes.shape({})),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
+
 InputField.defaultProps = {
   label: null,
-  errors: [],
+  validations: [],
   value: '',
 };
 ```
@@ -97,13 +101,13 @@ import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
-import { useFormFlowField } from 'react-form-flow';
+import { useFormFlowItem } from 'react-form-flow';
 import Validation from '../tools/helpers/components/Validation';
 
 const InputFieldRecipeLayout = styled.div``;
 
 export default function InputFieldRecipe() {
-  const nameField = useFormFlowField('name');
+  const nameField = useFormFlowItem('name');
 
   return (
     <InputFieldRecipeLayout>

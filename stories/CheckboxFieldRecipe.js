@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowItem } from '../src';
 import CheckboxField from '../react-form-flow-examples/fields/CheckboxField';
+import { useFormFlowField } from '../src';
 
 const CheckboxFieldRecipeLayout = styled.div``;
 
 export default function CheckboxFieldRecipe() {
-  const skillsField = useFormFlowItem('skills');
+  const skillsField = useFormFlowField('skills', { eventType: 'value' });
 
   return (
     <CheckboxFieldRecipeLayout>

@@ -2,40 +2,9 @@
 
 This recipe will show how to build a group/simple radio using the `input[type="radio"]` markup following the interface defined by `react-form-flow`.
 
-[Old Documentation for Input Field Recipe](https://github.com/daniloster/react-form-flow/blob/master/markdown/baseUsage/RECIPES_RADIO.md)
-
 ## Code
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
-
-### Validation
-
-You will probably need a component to display the validations, see the draft below.
-
-```jsx
-import React from 'react';
-import styled from 'styled-components';
-
-const ValidationLayout = styled.section`
-  .ValidationLayout__message {
-    color: red;
-  }
-`;
-
-export default function Validation({ errors = [] }) {
-  return (
-    <ValidationLayout>
-      {validations.map(
-        ({ key, message }) =>(
-          <div className="ValidationLayout__message" key={key}>
-            {message}
-          </div>
-        )
-      )}
-    </ValidationLayout>
-  );
-}
-```
 
 ### RadioField
 
@@ -71,11 +40,16 @@ const RadioFieldLayout = styled.div`
 
 export default function RadioField({
   checkedValue,
-  field,
-  label: labelText,
   name,
+  label: labelText,
+  onChangeValue,
+  validations,
+  value,
 }) {
   const id = useRef(uuid.v4());
+  const onChange = useCallback(() => {
+    onChangeValue(checkedValue);
+  }, [checkedValue, onChangeValue]);
 
   return (
     <RadioFieldLayout>
@@ -85,8 +59,7 @@ export default function RadioField({
           id={id.current}
           name={name}
           type="radio"
-          {...field}
-          value={checkedValue}
+          onChange={onChange}
           checked={value === checkedValue}
         />
       </label>
@@ -94,8 +67,20 @@ export default function RadioField({
   );
 }
 
+RadioField.propTypes = {
+  checkedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])
+    .isRequired,
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  onChangeValue: PropTypes.func.isRequired,
+  validations: PropTypes.arrayOf(PropTypes.shape({})),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+};
+
 RadioField.defaultProps = {
   label: null,
+  validations: [],
+  value: '',
 };
 ```
 
@@ -106,13 +91,13 @@ After building the Dropdown, see below how to use it.
 ```jsx
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowField } from 'react-form-flow';
+import { useFormFlowItem } from 'react-form-flow';
 import RadioField from './RadioField';
 
 const RadioFieldRecipeLayout = styled.div``;
 
 export default function RadioFieldRecipe() {
-  const handField = useFormFlowField('hand', { eventType: 'value' });
+  const handField = useFormFlowItem('hand');
 
   return (
     <RadioFieldRecipeLayout>
@@ -133,9 +118,6 @@ export default function RadioFieldRecipe() {
           {handField.value}
         </span>
       </fieldset>
-      {(handField.submitted || handField.touched || handField.dirty) && (
-        <Validations errors={handField.errors} />
-      )}
     </RadioFieldRecipeLayout>
   );
 }
