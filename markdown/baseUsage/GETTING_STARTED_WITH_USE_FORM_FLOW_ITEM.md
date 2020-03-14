@@ -1,28 +1,8 @@
-### How to use it
-
-Define your form data wrapping with the container below.
-
-```js
-import FormFlowProvider from 'react-form-flow';
-// or
-import { FormFlowProvider } from 'react-form-flow';
-```
-
-Use hooks to get values, event handler and validations.
-
-```html
-import { useFormFlowField, useFormFlowValidation } from 'react-form-flow';
-```
-
-## Getting started
+## Getting started with useFormFlowItem
 
 `react-form-flow` as its name describes is a library to define a common and automated workflow to collect and validate form data. Allow user to consume the data and validation based on the json path.
 
 To improve your productivity, it would be good to create your core form components such as input, dropdowns and on and on following the `react-form-flow` spec.
-
-[Code Sandbox Example](https://codesandbox.io/s/dreamy-bird-mnftf)
-
-We also have an older version using a [base hooks](https://github.com/daniloster/react-form-flow/blob/master/markdown/baseUsage/GETTING_STARTED_WITH_USE_FORM_FLOW_ITEM.md), it is useful for more advanced and custom usage. In most of the form cases, the current documentation is better option.
 
 _JSON PATH_ is a notation to navigate through the JSON object.
 
@@ -48,10 +28,11 @@ So, observing the json above, the json path to access the name of first child is
 ```jsx
 import React from 'react';
 
-export default function Validation({ errors }) {
+export default function Validation({ label, validations }) {
   return (
     <section>
-      {validations.map(({ key, message }) => <div key={key}>{message}</div>)}
+      {!!label && <div>{label}</div>}
+      {validations.map(({ key, isValid, message }) => !isValid && <div key={key}>{message}</div>)}
     </section>
   );
 }
@@ -59,46 +40,15 @@ export default function Validation({ errors }) {
 
 ### InputField
 
-The input field could receive from the `useFormFlowField` an object with the spec below.
+The input field could receive from the `useFormFlowItem` an object with the spec below.
 
-```ts
-interface FormFlowField {
-  dirty: boolean;
-  errors: Array<ValidationResult>;
-  field: FieldMetadata;
-  submitted: boolean;
-  touched: boolean;
-}
-```
-
-Validation returned can match whatever you want, for the sake of standard, let's always return this below.
-
-```ts
-interface ValidationResult {
-  data: object;
-  key: string;
-  isValid: boolean;
-  message: string|React.ReactNode;
-  path: string;
-  value: any;
-}
-```
-
-And, finally, the field would have these properties.
-
-```ts
-interface FieldMetadata {
-  /**
-   * Depending on the eventType passed to useFormFlowField, it returns
-   * either onChange or onChangeValue.
-   * */
-  onChange(e: Event): void;
-  onChangeValue(value: any): void;
-  /**
-   * Common properties
-   * */
-  onBlur(e: Event): void;
-  value: any;
+```js
+{
+  onChangeValue /* Function to update an object regarding the json path and value */,
+  onChange /* Function to handle input event "change" */,
+  setData /* Function to set the whole form data */,
+  validations  /* arrayOf(Validation) */,
+  value /* string */,
 }
 ```
 
@@ -108,20 +58,28 @@ Component...
 import React from 'react';
 import Validation from './Validation';
 
+/**
+ * @typedef Validation
+ * @property {object} data
+ * @property {any} value
+ * @property {string} path
+ * @property {string} key
+ * @property {boolean} isValid
+ * @property {string|React.node} message
+ * */
+
 export default function InputField({
-  errors,
-  field,
   label,
-  touched,
-  submitted,
+  onChange,
+  validations /* {array<Validation>} */,
   value,
 }) {
   return (
     <div>
       <div>{label}</div>
-      <input type="text" {...field} />
+      <input type="text" onChange={onChange} value={value} />
       <div>
-        {(submitted || touched) && <Validation validations={errors} />}
+        <Validation validations={validations} />
       </div>
     </div>
   );
@@ -142,7 +100,6 @@ function createRequiredValidation(message) {
     const key = `${path}-required`;
     const isValid = hasValue(value);
 
-    /* @type {Validation} */
     return { data, value, path, key, isValid, message };
   };
 }
@@ -155,7 +112,6 @@ function createMinLengthValidation(min, createMessage) {
     const { length } = value || '';
     const message = createMessage({ data, value, path, min, length });
 
-    /* @type {Validation} */
     return { data, value, path, key, isValid, message };
   };
 }
@@ -201,7 +157,7 @@ import styled from 'styled-components';
 import {
   createValidations,
   FormFlowProvider,
-  useFormFlowField,
+  useFormFlowItem,
   useFormFlowValidation,
 } from 'react-form-flow';
 import Validation from './Validation';
@@ -218,14 +174,26 @@ const Layout = styled.div`
   grid-template-rows: auto;
 `;
 
-function Form() {
-  const name = useFormFlowField('name');
-  const description = useFormFlowField('description');
+function Validations() {
+  const nameValidation = useFormFlowValidation('name');
+  const descriptionValidation = useFormFlowItem('description');
 
   return (
     <div>
-      <InputField label="Name" {...name} />
-      <InputField label="Description" {...description} />
+      <Validation label="Name" {...nameValidation} />
+      <Validation label="Description" {...descriptionValidation} />
+    </div>
+  );
+}
+
+function Form() {
+  const nameField = useFormFlowItem('name');
+  const descriptionField = useFormFlowItem('description');
+
+  return (
+    <div>
+      <InputField label="Name" {...nameField} />
+      <InputField label="Description" {...descriptionField} />
     </div>
   );
 }
@@ -234,6 +202,7 @@ function DemoApp() {
   return (
     <Layout>
       <FormFlowProvider initialData={{ name: '', description: '' }} schemaData={schemaData}>
+        <Validations />
         <Form />
       </FormFlowProvider>
     </Layout>

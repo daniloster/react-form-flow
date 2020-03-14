@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowItem } from '../src';
 import DropdownField from '../react-form-flow-examples/fields/DropdownField';
+import { useFormFlowField } from '../src';
 
 const DropdownFieldRecipeLayout = styled.div``;
 
@@ -29,7 +29,7 @@ function formatText(item) {
 }
 
 export default function DropdownFieldRecipe() {
-  const nationalityField = useFormFlowItem('nationality');
+  const nationalityField = useFormFlowField('nationality', { eventType: 'value' });
 
   return (
     <DropdownFieldRecipeLayout>
@@ -44,11 +44,11 @@ export default function DropdownFieldRecipe() {
         formatText={formatText}
       />
       <div>
-        {!nationalityField.value && <strong>No value selected yet.</strong>}
-        {nationalityField.value && (
+        {!nationalityField.field.value && <strong>No value selected yet.</strong>}
+        {nationalityField.field.value && (
           <div>
             <strong>Value:</strong>
-            <span>{JSON.stringify(nationalityField.value)}</span>
+            <span>{JSON.stringify(nationalityField.field.value)}</span>
           </div>
         )}
       </div>

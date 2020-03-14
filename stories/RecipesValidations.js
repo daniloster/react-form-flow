@@ -1,8 +1,8 @@
+import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import Validation from '../react-form-flow-examples/fields/Validation';
 import { FormFlowProvider, useFormFlowItem, useFormFlowValidation } from '../src';
-import Validation from '../tools/helpers/components/Validation';
 
 function UpdateData({ data }) {
   const { setData } = useFormFlowItem();
@@ -31,7 +31,7 @@ function Validations({ schemaData }) {
             isColored
             key={jsonPath}
             label={jsonPath}
-            validations={validations.filter(({ path }) => jsonPath === path)}
+            errors={validations.filter(({ path, isValid }) => jsonPath === path && !isValid)}
           />
           <hr />
         </React.Fragment>

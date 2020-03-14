@@ -1,10 +1,10 @@
 import React, { useCallback, useRef } from 'react';
-import FormFlowProvider, { createValidations, useFormFlowField, useFormFlowItem } from '../src';
+import DropdownField from '../react-form-flow-examples/fields/DropdownField';
+import InputField from '../react-form-flow-examples/fields/InputField';
+import { createValidations, FormFlowProvider, useFormFlowField } from '../src';
 import createRequiredListValidation from '../tools/helpers/components/createRequiredListValidation';
 import createRequiredValidation from '../tools/helpers/components/createRequiredValidation';
-import DropdownField from '../tools/helpers/components/DropdownField';
 import hasValue from '../tools/helpers/components/hasValue';
-import InputField from '../tools/helpers/components/InputField';
 
 const schemaData = {
   name: createValidations([], createRequiredValidation('Name is required.')),
@@ -50,14 +50,13 @@ function Contact({ index, setContacts, contacts }) {
   return (
     <div className="Contact__item">
       <DropdownField
-        {...typeField.field}
-        validations={typeField.errors}
+        {...typeField}
         options={options.current}
         formatText={byPass}
         formatValue={byPass}
         label="Type"
       />
-      <InputField {...valueField.field} validations={valueField.errors} label="Contact" />
+      <InputField {...valueField} label="Contact" />
       <button
         type="button"
         onClick={() => setContacts(contacts.filter((_, indexContact) => indexContact !== index))}
@@ -69,8 +68,8 @@ function Contact({ index, setContacts, contacts }) {
 }
 
 function CustomForm() {
-  const nameField = useFormFlowItem('name');
-  const { data, value: contacts = [], onChangeValue } = useFormFlowItem('contacts');
+  const nameField = useFormFlowField('name');
+  const { data, value: contacts = [], onChangeValue } = useFormFlowField('contacts');
 
   return (
     <div>

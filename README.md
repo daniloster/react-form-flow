@@ -45,6 +45,8 @@ Installing with yarn
 yarn add react-form-flow
 ```
 
+[Code Sandbox Example](https://codesandbox.io/s/dreamy-bird-mnftf)
+
 ## Documentation
 
 - [Getting started](https://github.com/daniloster/react-form-flow/blob/master/markdown/GETTING_STARTED.md)

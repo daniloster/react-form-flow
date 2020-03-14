@@ -2,8 +2,6 @@
 
 This recipe will show how to build a group/simple checkbox using the `input[type="checkbox"]` markup following the interface defined by `react-form-flow`.
 
-[Old Documentation for Checkbox Field Recipe](https://github.com/daniloster/react-form-flow/blob/master/markdown/baseUsage/RECIPES_CHECKBOX.md)
-
 ## Code
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
@@ -22,15 +20,16 @@ const ValidationLayout = styled.section`
   }
 `;
 
-export default function Validation({ errors = [] }) {
+export default function Validation({ validations = [] }) {
   return (
     <ValidationLayout>
       {validations.map(
-        ({ key, message }) =>(
-          <div className="ValidationLayout__message" key={key}>
-            {message}
-          </div>
-        )
+        ({ key, isValid, message }) =>
+          !isValid && (
+            <div className="ValidationLayout__message" key={key}>
+              {message}
+            </div>
+          )
       )}
     </ValidationLayout>
   );
@@ -72,14 +71,12 @@ const CheckboxFieldLayout = styled.div`
 
 export default function CheckboxField({
   checkedValue,
-  errors,
-  field,
   label: labelText,
-  submitted,
-  touched,
+  onChangeValue,
+  validations,
+  value,
 }) {
   const id = useRef(uuid.v4());
-  const { onBlur, onChangeValue, value = '' } = field;
   const onChange = useCallback(() => {
     const treatedValue = value || [];
     const hasValue = treatedValue.includes(checkedValue);
@@ -97,22 +94,35 @@ export default function CheckboxField({
         <input
           id={id.current}
           type="checkbox"
-          onBlur={onBlur}
           onChange={onChange}
           checked={(value || []).includes(checkedValue)}
         />
       </label>
       <div className="CheckboxFieldLayout__validations">
-        {(submitted || touched) && <Validation errors={errors} />}
+        <Validation validations={validations} />
       </div>
     </CheckboxFieldLayout>
   );
 }
 
+CheckboxField.propTypes = {
+  checkedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])
+    .isRequired,
+  label: PropTypes.string,
+  onChangeValue: PropTypes.func.isRequired,
+  validations: PropTypes.arrayOf(PropTypes.shape({})),
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.any),
+  ]),
+};
 
 CheckboxField.defaultProps = {
   label: null,
-  errors: []
+  validations: [],
+  value: '',
 };
 ```
 
@@ -123,13 +133,13 @@ After building the Dropdown, see below how to use it.
 ```jsx
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowField } from 'react-form-flow';
+import { useFormFlowItem } from 'react-form-flow';
 import CheckboxField from './CheckboxField';
 
 const CheckboxFieldRecipeLayout = styled.div``;
 
 export default function CheckboxFieldRecipe() {
-  const skillsField = useFormFlowField('skills', { eventType: 'value' });
+  const skillsField = useFormFlowItem('skills');
 
   return (
     <CheckboxFieldRecipeLayout>

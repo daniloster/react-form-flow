@@ -30,13 +30,13 @@ The return of the validation function must provide the interface below.
  * */
 ```
 
-```jsx
+```js
 /**
  * Creates a function validation to be used in the schemaData object.
  * @param {string} message is the text/React.node returned from the validation
  *
  * */
-function createRequiredValidation(message) {
+function  createRequiredValidation(message) {
   return ({ data, value, path }) => {
     const key = `${path}-required`;
     const isValid = hasValue(value);
@@ -53,7 +53,7 @@ For the max length validation, the constraint and the message needed to be provi
 In the example below we are using `Message` as a component.
 
 ```jsx
-function MaxLengthMessage({ length, max }) {
+function  MaxLengthMessage({ length, max }) {
   return `You have reached the limit of ${max}. (${length - max} character(s) beyond it)`;
 }
 ```
@@ -62,7 +62,7 @@ function MaxLengthMessage({ length, max }) {
 /**
  * Creates a function validation to be used in the schemaData object.
  * */
-function createMaxLengthValidation(max, Message) {
+function  createMaxLengthValidation(max, Message) {
   return args => {
     const { data, value, path } = args;
     const key = `${path}-min-length`;
@@ -95,10 +95,10 @@ const schemaData = {
 
 Lets say you have a validation for range, but, this information is obtained from 2 fields which would have `min`, `max` constraints for the value and a list of acceptable units e.g. `['seconds', 'minutes', 'hours']`.
 
-```jsx
+```js
 import { createValidations } from 'react-form-flow';
 
-function MinMaxLengthMessage({ min, max, unit }) {
+function  MinMaxLengthMessage({ min, max, unit }) {
   return `Only values between ${min} and ${max} is allowed for ${unit}.`;
 }
 
@@ -133,15 +133,72 @@ const maxs = {
 
 const schemaData = {
   'passport.visa.value': createValidations(
-    ['passport.visa.unit'], // Invalidation Json Paths
+    /* ['passport.visa.unit'], // Invalidation Json Paths */
+    /* Alternative to define invalidation */
+    ['$.unit'],
     createRequiredValidation('The visa must indicate how many days is allowed to stay.'),
     createMinMaxLengthValidation(mins, max, MinMaxLengthMessage)
   ),
   'passport.visa.unit': createValidations(
-    [], // Invalidation Json Paths
+    [],
     createRequiredValidation('Please select a unit to define how long the visa is valid.')
   ),
 };
 ```
 
 By doing this, every time that the `unit` is changed the validation for `value` is also computed.
+
+#### Ivalidation Json Paths
+
+The invalidation paths can be defined by absolute and relative paths. Being `$.` to navigate to parent node in relative path. We can better see it through examples.
+
+##### For our first case, let see how to navigate multiple levels
+
+```js
+const schemaData = {
+  'passport.age': createValidations(
+    [],
+    ...
+  ),
+  'passport.visa.unit': createValidations(
+    [],
+    ...
+  ),
+  'passport.visa.value': createValidations(
+    ['$.unit', '$.$.age'],
+    ...
+  ),
+}
+```
+
+Taking `passport.visa.value` and breaking into partial paths `["passport", "visa", "value"]`, the navigation `$.` refers going back to `visa`. Whereas `$.$.`, it would refer to `passport`.
+
+##### Handling array dependencies
+
+Let say, you need a validation to be performed for changes in correlated data based on indexes. Before going straight to the example, we need to understand a notation to refer to the indexes.
+
+Given the rule `contacts[]`, this means we have validations running for each element of the array contacts. To correlated indexes, we can user the reference to ocurency of `[]` as `$N`, being `N` the index where the `[]` occurs in the original rule.
+
+Ok, I get it too. It seems complex. Lets make it simple by examples.
+
+- Given the rule `people[].contacts[]`, invalidation paths `['$.friends[$1]']`
+  - Everytime friends at `N` changes, the people `people[i].contacts[N]` will be re-validated
+  - This because the index of `[]` for `contacts` in the original rule is `1`, then, it is referred at `friends` as `$1`
+- Given the rule `store.foods[]`, invalidation paths `['$.stocks[$0]']`
+  - Everytime stocks at `N` changes, the foods `store.foods[N]` will be re-validated
+  - This because the index of `[]` for `foods` in the original rule is `0`, then, it is referred at `stocks` as `$0`
+
+
+
+```js
+const schemaData = {
+  'store.stocks[]': createValidations(
+    [],
+    ...
+  ),
+  'store.foods[]': createValidations(
+    ['$.stocks[$0]'],
+    ...
+  ),
+}
+```

@@ -1,8 +1,8 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import hasValue from '../react-form-flow-examples/validationRecipes/hasValue';
 import { createValidations } from '../src';
 import RecipesValidations from './RecipesValidations';
-import hasValue from '../react-form-flow-examples/validationRecipes/hasValue';
 
 function decode(text) {
   const parser = document.createElement('div');
@@ -16,6 +16,9 @@ function parse(text) {
 }
 
 export default function RecipesValidationsInteractive({ data, factories, schemaData }) {
+  const [_data, set_data] = useState(data);
+  const [_factories, set_factories] = useState(data);
+  const [_schemaData, set_schemaData] = useState(data);
   const newData = parse(data);
   // eslint-disable-next-line
   const getSchemaData = new Function(
@@ -24,8 +27,18 @@ export default function RecipesValidationsInteractive({ data, factories, schemaD
     `${decode(factories)} return ${decode(schemaData)};`
   );
 
+  useEffect(() => {
+    set_data(data);
+    set_factories(factories);
+    set_schemaData(schemaData);
+  }, [data, factories, schemaData]);
+
   return (
-    <RecipesValidations data={newData} schemaData={getSchemaData(createValidations, hasValue)} />
+    _data === data &&
+    _factories === factories &&
+    _schemaData === schemaData && (
+      <RecipesValidations data={newData} schemaData={getSchemaData(createValidations, hasValue)} />
+    )
   );
 }
 

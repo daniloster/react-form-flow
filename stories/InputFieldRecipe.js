@@ -1,12 +1,12 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowItem } from '../src';
 import InputField from '../react-form-flow-examples/fields/InputField';
+import { useFormFlowField } from '../src';
 
 const InputFieldRecipeLayout = styled.div``;
 
 export default function InputFieldRecipe() {
-  const nameField = useFormFlowItem('name');
+  const nameField = useFormFlowField('name');
 
   return (
     <InputFieldRecipeLayout>
