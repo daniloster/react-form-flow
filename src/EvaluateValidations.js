@@ -23,7 +23,7 @@ function EvaluateValidation({ data, path, schemaData, validationsState, value })
   }, [path, invalidationPaths]);
   const previousDataRef = useRef(Array.from({ length: paths.length }).map(() => null));
   const newPreviousData = [];
-  const previousValidationRef = useRef({});
+  const previousValidationRef = useRef(null);
   const isChanged = paths.reduce((isOverallChanged, jsonPath, index) => {
     if (isOverallChanged) {
       return true;
@@ -35,7 +35,7 @@ function EvaluateValidation({ data, path, schemaData, validationsState, value })
    * Computing validations and returning cache if the invalidations hasn't changed
    */
   const validations = useMemo(() => {
-    if (!isChanged) {
+    if (!isChanged && previousValidationRef.current !== null) {
       return previousValidationRef.current;
     }
     return validate({ data, get, path, value });
