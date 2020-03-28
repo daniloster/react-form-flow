@@ -21,8 +21,10 @@ function factoryValidation(validationName, isValid) {
 Validations can be manipulated by get("${validationName}"), purge("${validationName}").`);
   }
 
-  validations[validationName] = ({ response, ...extraArgs } = EMPTY_OBJECT) =>
-    test(validationName, args => isValid({ ...args, ...extraArgs }), response);
+  validations[validationName] = ({ response, ...extraArgs } = EMPTY_OBJECT) => {
+    const validate = test(validationName, isValid, response);
+    return args => validate({ ...args, ...extraArgs });
+  };
 }
 
 /**
