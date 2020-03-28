@@ -105,7 +105,7 @@
     "test": "jest --config jestconfig.json --no-cache",
     "pretestc": "rm -rf ./build/coverage",
     "testc": "jest --config jestconfig.json --no-cache --coverage",
-    "test:watch": "npm run test -- --watch",
+    "test:watch": "jest --no-cache --watch",
     "prebuild": "rm -rf lib/ && mkdir -p lib",
     "lint": "eslint src --config ./.eslintrc.json --ignore-path ./.eslintignore",
     "validate": "npm run lint && npm run testc",
