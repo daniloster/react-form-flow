@@ -26,7 +26,7 @@ export default function useSubmitForm(submit) {
         submitCount: oldData.submitCount + 1,
       }));
 
-      await submit(values, { ...validationsState, isValid });
+      await submit(values, { ...validationsState, isValid, e });
 
       return false;
     },
