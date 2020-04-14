@@ -1,5 +1,5 @@
 function defaultResponse(args, validationName) {
-  return { key: `${args.path}.errors.${validationName}` };
+  return { key: `${args.path}.errors.${validationName}`.replace(/\[\d*\]/g, '') };
 }
 
 export default function test(validationName, isValid, response = defaultResponse) {
