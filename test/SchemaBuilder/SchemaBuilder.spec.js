@@ -1,9 +1,22 @@
 import SchemaBuilder from '../../src/SchemaBuilder'
+import { getResponseFromExtraArgs } from '../../src/SchemaBuilder/SchemaBuilder'
 import { get } from 'mutation-helper'
 
 describe('SchemaBuilder', () => {
   beforeEach(() => {
     SchemaBuilder.purge()
+  })
+
+  describe('getResponseFromExtraArgs handles unset cases', () => {
+    test('if getResponseFromExtraArgs returns undefined to undefined extraArgs', () => {
+      expect(getResponseFromExtraArgs()).toBe(undefined)
+    })
+    test('if getResponseFromExtraArgs returns undefined to empty extraArgs', () => {
+      expect(getResponseFromExtraArgs({ /* empty */ })).toBe(undefined)
+    })
+    test('if getResponseFromExtraArgs returns function to extraArgs within response', () => {
+      expect(getResponseFromExtraArgs({ response: function() {} })).toBeInstanceOf(Function)
+    })
   })
 
   describe('SchemaBuilder allow access to manage validations', () => {
@@ -88,6 +101,7 @@ describe('SchemaBuilder', () => {
           dependencies: [],
           get,
           isValid: true,
+          name: 'string',
           optional: false,
           key: "name.errors.string",
           path: "name",
@@ -101,6 +115,7 @@ describe('SchemaBuilder', () => {
             dependencies:  [],
             get,
             isValid: true,
+            name: 'string',
             optional: false,
             key: "name.errors.string",
             path: "name",
@@ -126,6 +141,7 @@ describe('SchemaBuilder', () => {
           dependencies: [],
           get,
           isValid: true,
+          name: 'string',
           optional: true,
           key: "name.errors.string",
           path: "name",
@@ -137,6 +153,7 @@ describe('SchemaBuilder', () => {
             dependencies:  [],
             get,
             isValid: true,
+            name: 'string',
             optional: true,
             key: "name.errors.string",
             path: "name",

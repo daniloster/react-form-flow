@@ -8,22 +8,32 @@ const validations = {
   test,
 };
 
+export function getResponseFromExtraArgs(defaultExtraArgs) {
+  const { response } = defaultExtraArgs || {};
+  return response;
+}
+
 /**
  * Factories methods to build validations which will be available
  * later in the build schema process
  * @param {string} validationName
  * @param {import('./types').ValidationProcessorChecker} isValid
+ * @param {import('./types').ExtraArguments} defaultExtraArgs
  * @returns {void}
  */
-function factoryValidation(validationName, isValid) {
+function factoryValidation(validationName, isValid, defaultExtraArgs) {
   if (validations[validationName]) {
     throw new Error(`The validation "${validationName}" already exists, you cannot override it.
 Validations can be manipulated by get("${validationName}"), purge("${validationName}").`);
   }
 
-  validations[validationName] = ({ response, ...extraArgs } = EMPTY_OBJECT) => {
+  const predefinedResponse = getResponseFromExtraArgs(defaultExtraArgs);
+  validations[validationName] = ({
+    response = predefinedResponse,
+    ...extraArgs
+  } = EMPTY_OBJECT) => {
     const validate = test(validationName, isValid, response);
-    return args => validate({ ...args, ...extraArgs });
+    return args => validate({ name: validationName, ...args, ...extraArgs });
   };
 }
 
