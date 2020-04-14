@@ -6,6 +6,7 @@ Manage your form through a small structure for capturing and validating form dat
 [![Build Status](https://travis-ci.com/daniloster/react-form-flow.svg?branch=master)](https://travis-ci.com/daniloster/react-form-flow)
 [![minizipped size](https://flat.badgen.net/bundlephobia/minzip/react-form-flow)](https://bundlephobia.com/result?p=react-form-flow@latest)
 
+## Code Sandbox Examples
 
 [Code Sandbox - With Schema Builder](https://codesandbox.io/s/condescending-cloud-gkdq3)
 
@@ -49,8 +50,6 @@ Installing with yarn
 ```bash
 yarn add react-form-flow
 ```
-
-[Code Sandbox Example](https://codesandbox.io/s/dreamy-bird-mnftf)
 
 ## Documentation
 
