@@ -1,13 +1,28 @@
 {
-  "presets": ["@babel/preset-react", "@babel/preset-env"],
+  "presets": [
+    ["@babel/preset-env", { "modules": true }],
+    "@babel/react",
+    "@babel/typescript"
+  ],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-export-namespace-from",
-    "@babel/plugin-proposal-throw-expressions",
-    "@babel/plugin-transform-modules-umd",
     ["styled-components", { "ssr": true }],
     "@babel/transform-runtime"
   ],
-  "ignore": ["/lib|node_modules|.spec.js/"]
+  "env": {
+    "test": {
+      "presets": [
+        ["@babel/preset-env", { "modules": "auto" }],
+        "@babel/react",
+        "@babel/typescript"
+      ],
+      "plugins": [
+        "@babel/plugin-transform-runtime",
+        "@babel/plugin-syntax-dynamic-import",
+        "@babel/plugin-proposal-class-properties",
+        ["styled-components", { "ssr": true }]
+      ]
+    }
+  }
 }

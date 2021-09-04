@@ -1,58 +1,68 @@
 {
-  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import"],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
+  },
   "extends": [
-    "airbnb",
+    "eslint:recommended",
+    // "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    // Uncomment the following lines to enable eslint-config-prettier
+    // Is not enabled right now to avoid issues with the Next.js repo
     "prettier"
   ],
-  "plugins": [
-    "prettier",
-    "react-hooks"
-  ],
+  "root": true,
+  "env": {
+    "es6": true,
+    "browser": true,
+    "jest": true,
+    "node": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "typescript": {}, // this loads <rootdir>/tsconfig.json to eslint
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    }
+  },
   "rules": {
-    "prettier/prettier": [
-      "error"
-    ],
     "complexity": [
       2,
       10
     ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "jsx-a11y/no-static-element-interactions": "off",
-    "react/jsx-filename-extension": "off",
-    "react/prefer-stateless-function": [
+    "import/no-unresolved": "error",
+    "react/react-in-jsx-scope": 0,
+    "react/display-name": 0,
+    "react/prop-types": 0,
+    "react/no-unescaped-entities": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/member-delimiter-style": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/no-use-before-define": 0,
+    "@typescript-eslint/no-unused-vars": [
       2,
       {
-        "ignorePureComponents": true
+        "argsIgnorePattern": "^_"
       }
     ],
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "react/require-default-props": "off",
-    "max-len": [
-      "error",
+    "no-console": [
+      1,
       {
-        "code": 100,
-        "ignoreComments": true
+        "allow": ["warn", "error"]
       }
     ]
-  },
-  "parser": "babel-eslint",
-  "globals": {
-    "window": true,
-    "document": true
-  },
-  "env": {
-    "es6": true,
-    "mocha": true,
-    "browser": true,
-    "node": true
-  },
-  "parserOptions": {
-    "ecmaFeatures": {},
-    "ecmaVersion": 2018,
-    "sourceType": "module"
   }
 }
