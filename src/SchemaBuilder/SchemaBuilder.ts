@@ -29,7 +29,7 @@ Validations can be manipulated by get("${validationName}"), purge("${validationN
 
   const factoryValidationInternal: ValidationProcessorFactory = (args: ValidationArgs): ValidationProcessor<T> => {
     const { response: __discard, ...extraArguments } = args || EMPTY_OBJECT;
-    const response: ResponseValidationProcessor = args.response || defaultExtraArgs?.response;
+    const response: ResponseValidationProcessor = args?.response || defaultExtraArgs?.response;
     const validate = factoryValidate(validationName, isValid, response);
     return (args: ValidationArgs & T) => validate({ name: validationName, ...args, ...extraArguments });
   };
