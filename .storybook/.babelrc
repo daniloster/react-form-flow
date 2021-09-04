@@ -1,15 +1,18 @@
 {
   "presets": [
     "@babel/preset-react",
-    "@babel/preset-env",
+    [
+      "@babel/preset-env",
+      {
+        "loose": true
+      }
+    ],
     "@babel/preset-typescript"
   ],
   "plugins": [
+    "@babel/plugin-transform-runtime",
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-export-namespace-from",
-    "@babel/plugin-proposal-throw-expressions",
-    "@babel/transform-runtime",
     ["styled-components", { "ssr": true }]
   ]
 }

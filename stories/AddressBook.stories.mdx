@@ -1,0 +1,22 @@
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import AddressBook from '../react-form-flow-examples/AddressBook'
+
+<Meta title="AddressBook" component={AddressBook} />
+
+<Props of={AddressBook} />
+
+export const Template = (args) => <AddressBook {...args} />
+
+# AddressBook
+
+Example of address book form with nested fields.
+
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{}}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

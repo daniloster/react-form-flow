@@ -26,7 +26,7 @@ function Validations({ schemaData }) {
   return (
     <ValidationsLayout>
       {Object.keys(schemaData).map(jsonPath => (
-        <React.Fragment>
+        <React.Fragment key={jsonPath}>
           <Validation
             isColored
             key={jsonPath}

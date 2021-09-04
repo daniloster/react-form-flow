@@ -1,10 +1,11 @@
+import SchemaData from './SchemaBuilder/SchemaData';
 import Validation from './SchemaBuilder/Validation';
 
 type FormFlowDataType = {
   submitCount: number;
   dirty: { [key: string]: boolean };
   initialValues: Object;
-  schemaData: Object;
+  schemaData: SchemaData;
   touched: { [key: string]: boolean };
   values: Object;
   validationsState: {

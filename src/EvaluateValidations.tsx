@@ -12,7 +12,7 @@ export default function EvaluateValidations() {
   const { schemaData, values: data } = state as FormFlowDataType;
   const schema = useMemo(
     () =>
-      typeof (schemaData as any).validate === 'function'
+      typeof ((schemaData as any).validate) === 'function'
         ? schemaData
         : wrapSchemaWithValidationMethods(schemaData as {
           [key: string]: AggregatedValidator;

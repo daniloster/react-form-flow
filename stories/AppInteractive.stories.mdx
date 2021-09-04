@@ -1,5 +1,4 @@
-import { Meta, Story, Canvas, Props } from '@storybook/addon-docs/blocks'
-import { text, number } from "@storybook/addon-knobs"
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
 import AppInteractive from './AppInteractive'
 
 <Meta title="AppInteractive" component={AppInteractive} />
@@ -15,14 +14,29 @@ Validating an interactive form built with `react-form-flow`.
 <Canvas>
   <Story
     name="Default"
+    argTypes={{
+      minNameLength: {
+        control: { 
+          type: 'range', 
+          min: 2, 
+          max: 20, 
+          step: 1,
+        },
+      },
+      minDescriptionLength: {
+          control: { 
+            type: 'range', 
+            min: 10, 
+            max: 2000, 
+            step: 1,
+          },
+        },
+    }}
     args={{
-      requiredNameMessage: text('Enter required message for name', 'Name is required!'),
-      minNameLength: number('Enter the min lenth for name', 5),
-      requiredDescriptionMessage: text(
-        'Enter required message for description',
-        'Description is required!'
-      ),
-      minDescriptionLength: number('Enter the min lenth for description', 300),
+      requiredNameMessage: 'Name is required!',
+      minNameLength: 5,
+      requiredDescriptionMessage: 'Description is required!',
+      minDescriptionLength: 300,
     }}
   >
     {Template.bind({})}

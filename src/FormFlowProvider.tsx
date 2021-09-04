@@ -4,7 +4,7 @@ import FormFlowDataContext from './FormFlowDataContext';
 import FormFlowDataType from './FormFlowDataType';
 import isValidByPaths from './isValidByPaths';
 import { ObservableState } from './react-state';
-import SchemaValidationMethods from './SchemaBuilder/SchemaValidationMethods';
+import SchemaData from './SchemaBuilder/SchemaData';
 
 type FormFlowProviderProps = {
   /**
@@ -18,7 +18,7 @@ type FormFlowProviderProps = {
   /**
     * The object with validation rules per field
     */
-  schemaData: SchemaValidationMethods;
+  schemaData: SchemaData;
   /**
     * Indicates when the data has been created or there was an attempt to create it
     */
