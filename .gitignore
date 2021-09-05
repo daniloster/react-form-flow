@@ -6,7 +6,6 @@
 **/mochawesome-report
 **/mochawesome-reports
 package-lock.json
-yarn.lock
 lib/
 dist/
 node_modules
