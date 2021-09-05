@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "declaration": true,
     "lib": [
       "DOM",
       "DOM.Iterable",
@@ -8,6 +9,11 @@
       "ESNext"
     ],
     "noEmit": false,
-    "declaration": true
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "typeRoots": [
+      "src/*",
+      "src/**/*"
+    ]
   }
 }

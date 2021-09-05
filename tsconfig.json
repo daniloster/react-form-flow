@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "downlevelIteration": true,
     "esModuleInterop": true,
@@ -22,6 +23,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "./lib",
+    "pretty": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
