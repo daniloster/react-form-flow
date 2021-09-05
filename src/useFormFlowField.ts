@@ -14,15 +14,15 @@ const DEFAULT_OPTIONS = {
 };
 
 export type MetadataField = {
-  onBlur?: (e: Event) => void;
-  onChange?: (e: Event) => void;
+  onBlur?: <T>(e: T) => void;
+  onChange?: <T>(e: T) => void;
   onChangeValue?: (value: any) => void;
   eventType?: 'event' | 'value';
 };
 
 export type Field = {
-  onBlur: (e: Event) => void;
-  onChange?: (e: Event) => void;
+  onBlur?: <T>(e: T) => void;
+  onChange?: <T>(e: T) => void;
   onChangeValue?: (value: any) => void;
 };
 

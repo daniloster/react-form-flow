@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useContext } from 'react';
+import { FormEvent, FormEventHandler, useCallback, useContext } from 'react';
 import FormFlowDataContext from './FormFlowDataContext';
 import isValidByPaths from './isValidByPaths';
 import ValidationState from './SchemaBuilder/ValidationState';
@@ -9,7 +9,7 @@ type SubmitHandler = (values: any, metadata: SubmissionMetadata) => void;
 /**
  * Creates properties to handle form submission
  */
-export default function useSubmitForm(submit: SubmitHandler): { onSubmit: SubmitHandler } {
+export default function useSubmitForm(submit: SubmitHandler): { onSubmit: FormEventHandler<HTMLFormElement> } {
   const observableState = useContext(FormFlowDataContext);
   const onSubmit = useCallback(
     async e => {
