@@ -1,0 +1,32 @@
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import RecipesValidationsInteractive, { decode, data, factories, schemaData } from './RecipesValidationsInteractive'
+
+<Meta
+  title="Recipes"
+  component={RecipesValidationsInteractive}
+  parameters={{
+    docs: { source: { code: schemaData }}
+  }}
+/>
+
+<Props of={RecipesValidationsInteractive} />
+
+export const Template = (args) => <RecipesValidationsInteractive {...args} />;
+
+# Recipes
+
+<Canvas>
+  <Story
+    name="Default"
+    argTypes={{
+      data: { control: { type: "object" } },
+      schemaData: { control: false },
+      factories: { control: false },
+    }}
+    args={{
+      data,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

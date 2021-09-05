@@ -26,7 +26,7 @@ Manage your form through a small structure for capturing and validating form dat
 
 ## Current core dependencies versions
 
-- node: `^8.10.0 || ^9.10.0`
+- node: `^14.16.0`
 - yarn (version may be check at `package.json`)
 
 ## Peer dependencies

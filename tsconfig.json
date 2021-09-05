@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": false,
+    "jsx": "react",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext",
+      "ES6"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitThis": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./lib",
+    "pretty": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES6"
+  },
+  "files": ["globals.d.ts"],
+  "exclude": [
+    ".next",
+    ".vscode",
+    ".yarn",
+    ".output",
+    "build",
+    "docs",
+    "jest-cache",
+    "node_modules",
+    "out",
+    "deployment",
+    "**/*.md"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}

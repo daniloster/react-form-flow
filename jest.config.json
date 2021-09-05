@@ -1,0 +1,63 @@
+{
+  "cacheDirectory": "./.cache/jest",
+  "coverageReporters": [
+    "html",
+    "json",
+    "lcov",
+    "text"
+  ],
+  "coverageDirectory": "<rootDir>/build/coverage/",
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "src/**/*.js"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "branches": 90,
+      "functions": 90,
+      "lines": 90,
+      "statements": 90
+    }
+  },
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js",
+    "jsx",
+    "json"
+  ],
+  "modulePathIgnorePatterns": [
+    "<rootDir>/build/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/tools"
+  ],
+  "roots": ["<rootDir>"],
+  "setupFiles": [
+    "<rootDir>/tools/helpers/jest.setup.js"
+  ],
+  "setupFilesAfterEnv": [
+    "<rootDir>/tools/helpers/jest.setup.afterEnv.js"
+  ],
+  "testMatch": [
+    "<rootDir>/test/*.spec.tsx",
+    "<rootDir>/test/**/*.spec.tsx",
+    "<rootDir>/test/*.spec.ts",
+    "<rootDir>/test/**/*.spec.ts"
+  ],
+  "testPathIgnorePatterns": ["<rootDir>[/\\\\](node_modules|.next)[/\\\\]"],
+  "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"],
+  "transform": {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+  },
+  "watchPlugins": [
+    "jest-watch-typeahead/filename",
+    "jest-watch-typeahead/testname"
+  ],
+  "moduleNameMapper": {
+    "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+    "\\.(gif|ttf|eot|svg|png)$": "<rootDir>/test/__mocks__/fileMock.js",
+    "^helpers/(.*)$": "<rootDir>/helpers/$1"
+  },
+  "testEnvironment": "jsdom",
+  "verbose": false
+}
