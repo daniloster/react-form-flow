@@ -5,8 +5,8 @@ import ValidationProcessor from './ValidationProcessor';
 import ValidationProcessorChecker from './ValidationProcessorChecker';
 
 // function defaultResponse(args: ValidationArgs, validationName: string): Partial<Validation> {
-function defaultResponse(args: ValidationArgs): Partial<Validation> {
-  return { key: `${args.path}.errors.${args.name}`.replace(/\[\d*\]/g, '') };
+function defaultResponse(): Partial<Validation> {
+  return {};
 }
 
 export default function factoryValidate(
@@ -18,7 +18,7 @@ export default function factoryValidate(
     ...args,
     isValid: isValid(args),
     name: validationName,
-    key: `${args.path}.errors.${validationName}`,
+    key: `${args.path}.errors.${validationName}`.replace(/\[\d*\]/g, ''),
     ...(response || defaultResponse)(args),
   }) as Validation);
 }

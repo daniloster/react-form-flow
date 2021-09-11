@@ -28,10 +28,10 @@ Validations can be manipulated by get("${validationName}"), purge("${validationN
   }
 
   const factoryValidationInternal: ValidationProcessorFactory = (args: ValidationArgs): ValidationProcessor<T> => {
-    const { response: __discard, ...extraArguments } = args || EMPTY_OBJECT;
+    const { response: __discard, ...remainingArguments } = args || EMPTY_OBJECT;
     const response: ResponseValidationProcessor = args?.response || defaultExtraArgs?.response;
     const validate = factoryValidate(validationName, isValid, response);
-    return (args: ValidationArgs & T) => validate({ name: validationName, ...args, ...extraArguments });
+    return (internalArgs: ValidationArgs & T) => validate({ name: validationName, ...internalArgs, ...remainingArguments });
   };
   validations[validationName] = factoryValidationInternal;
 }
@@ -55,16 +55,21 @@ function builder(): Builder {
       const newBuilder: BuilderNode = {
         check: undefined!,
         end: undefined!,
-        test: (...args) => {
-          validationMethods.push(factoryValidate(...args));
+        test: (validationName: string,
+          isValid: ValidationProcessorChecker,
+          response?: ResponseValidationProcessor) => {
+          validationMethods.push(factoryValidate(validationName, isValid, response));
+          newBuilder[validationName] = () => {
+            return newBuilder;
+          };
           return newBuilder;
         },
       };
       Object.entries(validations).forEach(([key, method]) => {
         if (!newBuilder[key]) {
           newBuilder[key] = ((...args: any[]) => {
-            const [input, extra] = args as [ValidationArgs, ExtraArguments];
-            validationMethods.push(method(input, extra));
+            const [input] = args as [ValidationArgs & ExtraArguments];
+            validationMethods.push(method(input));
             return newBuilder;
           }) as Function;
         }

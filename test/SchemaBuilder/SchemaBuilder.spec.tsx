@@ -22,6 +22,7 @@ describe('SchemaBuilder', () => {
       const result = schema.validate({ name: 'Unknown' });
       expect(result.byPath["name"].length).toEqual(2);
       expect(result.byPath["name"].find((validation) => validation.name === "validLength").isValid).toEqual(true);
+      expect(result.byPath["name"].find((validation) => validation.name === "validLength").key).toEqual("name.errors.validLength");
     });
 
     test('if validates as invalid with test', () => {
@@ -39,6 +40,7 @@ describe('SchemaBuilder', () => {
       const result = schema.validate({ name: 'Unkno' });
       expect(result.byPath["name"].length).toEqual(2);
       expect(result.byPath["name"].find((validation) => validation.name === "validLength").isValid).toEqual(false);
+      expect(result.byPath["name"].find((validation) => validation.name === "validLength").key).toEqual("name.errors.validLength");
     });
   });
   describe('SchemaBuilder allow access to manage validations', () => {
