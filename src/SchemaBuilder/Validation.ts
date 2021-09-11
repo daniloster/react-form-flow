@@ -2,7 +2,8 @@ import ValidationArgs from './ValidationArgs';
 
 interface Validation extends ValidationArgs {
   isValid: boolean;
-  message?: any;
+  name: string;
+  key: string;
 }
 
 export default Validation;
