@@ -12,10 +12,15 @@ Manage your form through a small structure for capturing and validating form dat
 
 [Code Sandbox - No Schema Builder](https://codesandbox.io/s/dreamy-bird-mnftf)
 
-## Docs
+## Documentation
 
-- [react-form-flow](https://github.com/daniloster/react-form-flow/blob/master/README.md)
-- [react-form-flow/API](https://github.com/daniloster/react-form-flow/blob/master/API.md)
+- [Storybook](https://codeinbox.me/react-form-flow/)
+- [Getting started](https://github.com/daniloster/react-form-flow/blob/master/markdown/GETTING_STARTED.md)
+- [Recipes: Factory for validations](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_VALIDATIONS.md)
+- [Recipes: Input Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_INPUT.md)
+- [Recipes: Checkbox Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_CHECKBOX.md)
+- [Recipes: Dropdown Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_DROPDOWN.md)
+- [Recipes: Radio Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_RADIO.md)
 
 ## Contributions rules
 
@@ -50,12 +55,3 @@ Installing with yarn
 ```bash
 yarn add react-form-flow
 ```
-
-## Documentation
-
-- [Getting started](https://github.com/daniloster/react-form-flow/blob/master/markdown/GETTING_STARTED.md)
-- [Recipes: Factory for validations](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_VALIDATIONS.md)
-- [Recipes: Input Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_INPUT.md)
-- [Recipes: Checkbox Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_CHECKBOX.md)
-- [Recipes: Dropdown Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_DROPDOWN.md)
-- [Recipes: Radio Field](https://github.com/daniloster/react-form-flow/blob/master/markdown/RECIPES_RADIO.md)
