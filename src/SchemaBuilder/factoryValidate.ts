@@ -17,6 +17,8 @@ export default function factoryValidate(
   return (args: ValidationArgs) => (({
     ...args,
     isValid: isValid(args),
-    ...(response || defaultResponse)({ ...args, anme: validationName }),
+    name: validationName,
+    key: `${args.path}.errors.${validationName}`,
+    ...(response || defaultResponse)(args),
   }) as Validation);
 }

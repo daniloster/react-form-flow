@@ -55,7 +55,10 @@ function builder(): Builder {
       const newBuilder: BuilderNode = {
         check: undefined!,
         end: undefined!,
-        test: undefined!,
+        test: (...args) => {
+          validationMethods.push(factoryValidate(...args));
+          return newBuilder;
+        },
       };
       Object.entries(validations).forEach(([key, method]) => {
         if (!newBuilder[key]) {

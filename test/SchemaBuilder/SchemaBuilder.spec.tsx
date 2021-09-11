@@ -6,6 +6,41 @@ describe('SchemaBuilder', () => {
     SchemaBuilder.purge();
   });
 
+  describe('SchemaBuilder validates with test', () => {
+    test('if validates as valid with test', () => {
+      SchemaBuilder.factory("required", (metadata) => Boolean(metadata.value ?? false));
+      const schema = SchemaBuilder.builder()
+      .with('name')
+      .check("required", {})
+      .test("validLength", (metadata) => {
+        const { value } = metadata;
+        return (value ?? "").trim().length > 5
+      })
+      .end()
+      .build();
+
+      const result = schema.validate({ name: 'Unknown' });
+      expect(result.byPath["name"].length).toEqual(2);
+      expect(result.byPath["name"].find((validation) => validation.name === "validLength").isValid).toEqual(true);
+    });
+
+    test('if validates as invalid with test', () => {
+      SchemaBuilder.factory("required", (metadata) => Boolean(metadata.value ?? false));
+      const schema = SchemaBuilder.builder()
+      .with('name')
+      .check("required", {})
+      .test("validLength", (metadata) => {
+        const { value } = metadata;
+        return (value ?? "").trim().length > 5
+      })
+      .end()
+      .build();
+
+      const result = schema.validate({ name: 'Unkno' });
+      expect(result.byPath["name"].length).toEqual(2);
+      expect(result.byPath["name"].find((validation) => validation.name === "validLength").isValid).toEqual(false);
+    });
+  });
   describe('SchemaBuilder allow access to manage validations', () => {
     test('if SchemaBuilder allow get the validation', () => {
       expect(SchemaBuilder.get('test')).toBeInstanceOf(Function);
