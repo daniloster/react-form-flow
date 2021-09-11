@@ -8,7 +8,7 @@ import ValidationProcessorFactory from './ValidationProcessorFactory';
 type TestValidation<T> = (
   validation: string,
   isValid: ValidationProcessorChecker,
-  response: ResponseValidationProcessor
+  response?: ResponseValidationProcessor
 ) => T;
 interface BaseBuilderNode<Main, Node> {
   check<T = any>(validation: string, extraArguments: Partial<ExtraArguments> & T): Node;
