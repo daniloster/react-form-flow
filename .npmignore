@@ -5,6 +5,7 @@
 **/mochawesome-report
 **/mochawesome-reports
 .travis/
+.workflow/
 .storybook/
 build/
 docs/
