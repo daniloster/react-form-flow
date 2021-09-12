@@ -20,6 +20,7 @@ if [[ $GITHUB_EVENT_NAME == 'push' ]]; then
     echo "BUMPING PACKAGE [$PACKAGE_NAME] TO [$NEW_VERSION]"
     echo $NEW_VERSION | ./.workflow/bump_version.sh
     git add package.json
+    git add docs
     export COMMIT_VERSION_MESSAGE="[skip ci] v$NEW_VERSION"
     git commit -m "$COMMIT_VERSION_MESSAGE"
     LAST_COMMIT_FOR_TAGGING="$(git log --oneline --no-merges -n 1 | awk '{print $1}')"
@@ -58,15 +59,27 @@ if [[ $GITHUB_EVENT_NAME == 'push' ]]; then
   if [[ $COMMENTS == *"[release]"* ]] && [[ $COMMENTS == *"[major]"* ]]; then
     echo '** Versioning - MAJOR'
     export NEW_VERSION="$(echo "major" | ./.workflow/get_bump_version.sh)"
+    yarn build:storybook
     confirm_bump
   elif [[ $COMMENTS == *"[release]"* ]] && [[ $COMMENTS == *"[minor]"* ]]; then
     echo '** Versioning - MINOR'
     export NEW_VERSION="$(echo "minor" | ./.workflow/get_bump_version.sh)"
+    yarn build:storybook
     confirm_bump
   elif [[ $COMMENTS == *"[release]"* ]] && [[ $COMMENTS == *"[patch]"* ]]; then
     echo '** Versioning - PATCH'
     export NEW_VERSION="$(echo "patch" | ./.workflow/get_bump_version.sh)"
+    yarn build:storybook
     confirm_bump
+  elif [[ $COMMENTS == *"[docs]"* ]]; then
+    echo '** Versioning - DOCS'
+
+    yarn build:storybook
+    
+    git add docs
+    export COMMIT_VERSION_MESSAGE="[skip ci] docs"
+    git commit -m "$COMMIT_VERSION_MESSAGE"
+    git push gh-publish master
   else
     echo '** NOT RELEASED'
   fi

@@ -1,0 +1,39 @@
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import RecipesSchemaBuilder, { decode, data } from './RecipesSchemaBuilder'
+
+<Meta
+  title="Docs/Recipes/Schema Builder"
+  component={RecipesSchemaBuilder}
+  parameters={{
+    docs: { source: { code: "" }}
+  }}
+/>
+
+<Props of={RecipesSchemaBuilder} />
+
+export const Template = (args) => <RecipesSchemaBuilder {...args} />;
+
+# Recipes
+
+This page offers a interactive way to experience the validations with the form library.
+
+## Schema Builder
+
+Using the new SchemaBuilder, you can edit the body of the function getShemaData(SchemaBuilder, hasValue).
+
+<Canvas>
+  <Story
+    name="Schema Builder"
+    argTypes={{
+      data: { control: { type: "object" } },
+      schemaData: { control: false },
+      factories: { control: false },
+    }}
+    args={{
+      data,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+

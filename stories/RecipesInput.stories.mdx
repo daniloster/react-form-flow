@@ -1,14 +1,27 @@
-# Input Field Recipe
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import RecipesSchemaBuilder, { decode, data } from './RecipesSchemaBuilder'
+
+<Meta
+  title="Docs/Recipes/Elements/Input"
+  component={RecipesSchemaBuilder}
+  parameters={{
+    docs: { source: { code: "" }}
+  }}
+/>
+
+# Recipes
+
+How to build specific form elements to use the hooks provided by `react-form-flow`.
+
+## Input Field Recipe
 
 The idea here is to show how to optimise your performance by reusing a input field.
-
-[Old Documentation for Input Field Recipe](https://github.com/daniloster/react-form-flow/blob/master/markdown/baseUsage/RECIPES_INPUT.md)
 
 ## Code
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
 
-### Validation
+__src/ValidationResult.jsx__
 
 You will probably need a component to display the validations, see the draft below.
 
@@ -16,39 +29,39 @@ You will probably need a component to display the validations, see the draft bel
 import React from 'react';
 import styled from 'styled-components';
 
-const ValidationLayout = styled.section`
-  .ValidationLayout__message {
+const ValidationResultLayout = styled.section`
+  .ValidationResultLayout__message {
     color: red;
   }
 `;
 
-export default function Validation({ errors = [] }) {
+export default function ValidationResult({ errors = [] }) {
   return (
-    <ValidationLayout>
+    <ValidationResultLayout>
       {validations.map(
-        ({ key, message }) =>(
-          <div className="ValidationLayout__message" key={key}>
-            {message}
+        (validation) =>(
+          <div className="ValidationResultLayout__message" key={validation.key}>
+            {JSON.stringify(validation, null, 2)}
           </div>
         )
       )}
-    </ValidationLayout>
+    </ValidationResultLayout>
   );
 }
 ```
 
-### InputField
+__src/InputField.jsx__
 
 In the case below, validations are received always and the consumer decides when to display them.
 
-**Note**: For this case, we are only displaying after visiting the field, but, nothing block you to pass another property `showValidation` when the form is submitted, then, it would be able to display by `{(isVisited || showValidation) && <Validation validations={validations} />}`.
+**Note**: For this case, we are only displaying after visiting the field, but, nothing block you to pass another property `showValidation` when the form is submitted, then, it would be able to display by `{(isVisited || showValidation) && <ValidationResult validations={validations} />}`.
 
 ```jsx
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import styled from 'styled-components';
-import Validation from './Validation';
+import ValidationResult from './ValidationResult';
 
 const InputFieldLayout = styled.div`
   padding: 0 0 10px 0;
@@ -77,7 +90,7 @@ export default function InputField(props) {
         <input id={id.current} type="text" {...field} />
       </label>
       <div className="InputFieldLayout__validations">
-        {(submitted || touched) && <Validation errors={errors} />}
+        {(submitted || touched) && <ValidationResult errors={errors} />}
       </div>
     </InputFieldLayout>
   );
@@ -98,9 +111,10 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import { useFormFlowField } from 'react-form-flow';
-import Validation from '../tools/helpers/components/Validation';
 
-const InputFieldRecipeLayout = styled.div``;
+const InputFieldRecipeLayout = styled.div`
+  width: 100%;
+`;
 
 export default function InputFieldRecipe() {
   const nameField = useFormFlowField('name');

@@ -1,16 +1,27 @@
-# Dropdown Field Recipe
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import RecipesSchemaBuilder, { decode, data } from './RecipesSchemaBuilder'
+
+<Meta
+  title="Docs/Recipes/Elements/Dropdown"
+  component={RecipesSchemaBuilder}
+  parameters={{
+    docs: { source: { code: "" }}
+  }}
+/>
+
+# Recipes
+
+How to build specific form elements to use the hooks provided by `react-form-flow`.
+
+## Dropdown Field Recipe
 
 This recipe will show how to build a simple dropdown using the select markup following the interface defined by `react-form-flow`.
-
-The [Code Sandbox Example](https://codesandbox.io/s/dreamy-bird-mnftf) has a simpler implementation of native select using `useFormFlowField`.
-
-[Old Documentation for Dropdown Field Recipe](https://github.com/daniloster/react-form-flow/blob/master/markdown/baseUsage/RECIPES_DROPDOWN.md)
 
 ## Code
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
 
-### Validation
+__src/ValidationResult.jsx__
 
 You will probably need a component to display the validations, see the draft below.
 
@@ -18,39 +29,39 @@ You will probably need a component to display the validations, see the draft bel
 import React from 'react';
 import styled from 'styled-components';
 
-const ValidationLayout = styled.section`
-  .ValidationLayout__message {
+const ValidationResultLayout = styled.section`
+  .ValidationResultLayout__message {
     color: red;
   }
 `;
 
-export default function Validation({ errors = [] }) {
+export default function ValidationResult({ errors = [] }) {
   return (
-    <ValidationLayout>
+    <ValidationResultLayout>
       {validations.map(
-        ({ key, message }) =>(
-          <div className="ValidationLayout__message" key={key}>
-            {message}
+        (validation) =>(
+          <div className="ValidationResultLayout__message" key={validation.key}>
+            {JSON.stringify(validation, null, 2)}
           </div>
         )
       )}
-    </ValidationLayout>
+    </ValidationResultLayout>
   );
 }
 ```
 
-### DropdownField
+__src/DropdownField.jsx__
 
 Here, validations are received always and the consumer decides when to display them.
 
-**Note**: For this case, we are only displaying after visiting the field, but, nothing block you to pass another property `showValidation` when the form is submitted, then, it would be able to display by `{(isVisited || showValidation) && <Validation validations={validations} />}`.
+**Note**: For this case, we are only displaying after visiting the field, but, nothing block you to pass another property `showValidation` when the form is submitted, then, it would be able to display by `{(isVisited || showValidation) && <ValidationResult validations={validations} />}`.
 
 ```jsx
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import styled from 'styled-components';
-import Validation from './Validation';
+import ValidationResult from './ValidationResult';
 
 const DropdownFieldLayout = styled.div`
   padding: 0 0 10px 0;
@@ -112,7 +123,7 @@ export default function DropdownField({
         </select>
       </label>
       <div className="DropdownFieldLayout__validations">
-        {(submitted || dirty || touched) && <Validation errors={errors} />}
+        {(submitted || dirty || touched) && <ValidationResult errors={errors} />}
       </div>
     </DropdownFieldLayout>
   );

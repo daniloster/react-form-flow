@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import hasValue from '../react-form-flow-examples/validationRecipes/hasValue';
-import { createValidations } from '../src';
+import { SchemaBuilder } from '../src';
 import Editor from '../tools/helpers/components/Editor';
 import RecipesValidations from './RecipesValidations';
 
@@ -11,19 +11,15 @@ export function decode(text) {
   return parser.textContent;
 }
 
-function parse(text) {
-  return JSON.parse(decode(text));
-}
-
-export default function RecipesValidationsInteractive({ data: dataProps, schemaData: schemaDataProps }) {
+export default function RecipesSchemaBuilder({ data: dataProps, schemaData: schemaDataProps }) {
   const [_schemaData, set_schemaData] = useState(schemaDataProps || schemaData);
   const schemaDataObject = useMemo(() => {
     const getSchemaData = new Function(
-      'createValidations',
+      'SchemaBuilder',
       'hasValue',
       decode(_schemaData)
     );
-    return getSchemaData(createValidations, hasValue);
+    return getSchemaData(SchemaBuilder, hasValue);
   }, [_schemaData]);
   const [_schemaDataObjectSaved, set_schemaDataObjectSaved] = useState(schemaDataObject);
   const onUpdateCode = useCallback(() => {
@@ -35,8 +31,8 @@ export default function RecipesValidationsInteractive({ data: dataProps, schemaD
     _schemaDataObjectSaved != null && (
       <>
         <fieldset>
-          <legend>factories</legend>
-          <code>{'import { createValidations } from "react-form-flow";'}</code>
+          <legend>Assumed SchemaBuilder and hasValue are available...</legend>
+          <code>{'import { SchemaBuilder } from "react-form-flow";'}</code>
           <code>
             <pre>
               {`
@@ -50,7 +46,7 @@ export default function hasValue(value) {
           </code>
         </fieldset>
         <fieldset>
-          <legend>schemaData</legend>
+          <legend>Body of getShemaData(SchemaBuilder, hasValue)</legend>
           <Editor value={_schemaData} onChangeValue={set_schemaData} />
         </fieldset>
         <div>
@@ -73,28 +69,25 @@ export const data = {
   }
 };
 export const schemaData = `
-/* Put your factory functions here in order to use in the schemaData */
-/* Example */
-  
-function createRequiredValidation(message) {
-  return ({ data, value, path }) => {
-    const key = \`\${path}-required\`;
-    const isValid = hasValue(value);
-    
-    return { data, value, path, key, isValid, message };
-  };
+
+/** 
+ * Once you factory it, you can use as many times as you want via "check"
+ **/
+if (!SchemaBuilder.get("string.required")) {
+  SchemaBuilder.factory("string.required", (metadata) => hasValue(metadata.value));
 }
 
-/* End: Example */
+/** 
+ * You can provide extra arguments such as message, or use some translation library to
+ * transform the property "key" returned into a message.
+ **/
+return SchemaBuilder.builder()
+  .with("name", [])
+  .check("string.required")
+  .end()
+  .with("description", [])
+  .check("string.required", { message: "Description is required" })
+  .end()
+  .build();
 
-return {
-  name: createValidations(
-    [],
-    createRequiredValidation('Name is required.')
-  ),
-  description: createValidations(
-    [],
-    createRequiredValidation('Description is required.')
-  )
-}
 `.trim();

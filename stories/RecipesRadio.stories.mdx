@@ -1,4 +1,19 @@
-# Radio Field Recipe
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import RecipesSchemaBuilder, { decode, data } from './RecipesSchemaBuilder'
+
+<Meta
+  title="Docs/Recipes/Elements/Radio"
+  component={RecipesSchemaBuilder}
+  parameters={{
+    docs: { source: { code: "" }}
+  }}
+/>
+
+# Recipes
+
+How to build specific form elements to use the hooks provided by `react-form-flow`.
+
+## Radio Field Recipe
 
 This recipe will show how to build a group/simple radio using the `input[type="radio"]` markup following the interface defined by `react-form-flow`.
 
@@ -6,11 +21,40 @@ This recipe will show how to build a group/simple radio using the `input[type="r
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
 
+__src/ValidationResult.jsx__
+
+You will probably need a component to display the validations, see the draft below.
+
+```jsx
+import React from 'react';
+import styled from 'styled-components';
+
+const ValidationResultLayout = styled.section`
+  .ValidationResultLayout__message {
+    color: red;
+  }
+`;
+
+export default function ValidationResult({ errors = [] }) {
+  return (
+    <ValidationResultLayout>
+      {validations.map(
+        (validation) =>(
+          <div className="ValidationResultLayout__message" key={validation.key}>
+            {JSON.stringify(validation, null, 2)}
+          </div>
+        )
+      )}
+    </ValidationResultLayout>
+  );
+}
+```
+
 ### RadioField
 
 Here, validations are received always and the consumer decides when to display them.
 
-**Note**: For this case, there is no validation added. But, as all the other recipes, we cloud display the validations straightaway or through some property to control if it will be displayed. e.g. `showValidation` when the form is submitted, then, it would be able to display by `{showValidation && <Validation validations={validations} />}`.
+**Note**: For this case, there is no validation added. But, as all the other recipes, we cloud display the validations straightaway or through some property to control if it will be displayed. e.g. `showValidation` when the form is submitted, then, it would be able to display by `{showValidation && <ValidationResult validations={validations} />}`.
 
 ```jsx
 import React, { useCallback, useRef, useState } from 'react';
@@ -40,16 +84,11 @@ const RadioFieldLayout = styled.div`
 
 export default function RadioField({
   checkedValue,
-  name,
+  field,
   label: labelText,
-  onChangeValue,
-  validations,
-  value,
+  name,
 }) {
   const id = useRef(uuid.v4());
-  const onChange = useCallback(() => {
-    onChangeValue(checkedValue);
-  }, [checkedValue, onChangeValue]);
 
   return (
     <RadioFieldLayout>
@@ -59,7 +98,8 @@ export default function RadioField({
           id={id.current}
           name={name}
           type="radio"
-          onChange={onChange}
+          {...field}
+          value={checkedValue}
           checked={value === checkedValue}
         />
       </label>
@@ -67,20 +107,8 @@ export default function RadioField({
   );
 }
 
-RadioField.propTypes = {
-  checkedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])
-    .isRequired,
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  onChangeValue: PropTypes.func.isRequired,
-  validations: PropTypes.arrayOf(PropTypes.shape({})),
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
-};
-
 RadioField.defaultProps = {
   label: null,
-  validations: [],
-  value: '',
 };
 ```
 
@@ -91,13 +119,13 @@ After building the Dropdown, see below how to use it.
 ```jsx
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowItem } from 'react-form-flow';
+import { useFormFlowField } from 'react-form-flow';
 import RadioField from './RadioField';
 
 const RadioFieldRecipeLayout = styled.div``;
 
 export default function RadioFieldRecipe() {
-  const handField = useFormFlowItem('hand');
+  const handField = useFormFlowField('hand', { eventType: 'value' });
 
   return (
     <RadioFieldRecipeLayout>
@@ -118,6 +146,9 @@ export default function RadioFieldRecipe() {
           {handField.value}
         </span>
       </fieldset>
+      {(handField.submitted || handField.touched || handField.dirty) && (
+        <ValidationResult errors={handField.errors} />
+      )}
     </RadioFieldRecipeLayout>
   );
 }
