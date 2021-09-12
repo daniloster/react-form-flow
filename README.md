@@ -16,7 +16,7 @@ Manage your form through a small structure for capturing and validating form dat
 - [Recipes/Elements: Checkbox Field](https://codeinbox.me/react-form-flow/?path=/docs/docs-recipes-checkbox--page)
 - [Recipes/Elements: Dropdown Field](https://codeinbox.me/react-form-flow/?path=/docs/docs-recipes-dropdown--page)
 - [Recipes/Elements: Radio Field](https://codeinbox.me/react-form-flow/?path=/docs/docs-recipes-radio--page)
-- [Code Sandbox](https://codesandbox.io/s/condescending-cloud-gkdq3)
+- [Code Sandbox](https://codesandbox.io/s/pensive-paper-sgykr)
 
 ## Contributions rules
 
