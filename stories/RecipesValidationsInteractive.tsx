@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import hasValue from '../react-form-flow-examples/validationRecipes/hasValue';
+import hasValue from '../react-form-flow-examples/hasValue';
 import { createValidations } from '../src';
 import Editor from '../tools/helpers/components/Editor';
 import RecipesValidations from './RecipesValidations';

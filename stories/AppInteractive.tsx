@@ -1,10 +1,23 @@
-import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { createValidations } from '../src';
-import createRequiredValidation from '../tools/helpers/components/createRequiredValidation';
-import createMinLengthValidation from '../tools/helpers/components/createMinLengthValidation';
-
+import React, { useRef } from 'react';
+import { SchemaBuilder } from '../src';
 import App from './App';
+
+function hasValue(value) {
+  return (
+    value !== null && value !== undefined && (typeof value !== 'string' || (value && value.trim()))
+  );
+}
+
+/**
+ * If you try to add the same validation name twice it will throw an error. See recommendation in Getting Started docs.
+ */
+try { SchemaBuilder.factory("max-length", ({ value, max }) => !hasValue(value ?? "") || (value ?? "").length <= max); } catch {}
+try { SchemaBuilder.factory("min-length", ({ value, min }) => !hasValue(value ?? "") || (value ?? "").length >= min); } catch {}
+try { SchemaBuilder.factory("required-array", ({ value }) => hasValue(value) && typeof value.forEach === "function" && value.length >= 0); } catch {}
+try { SchemaBuilder.factory("required", ({ value }) => hasValue(value ?? "") && (value ?? "").length >= 0); } catch {}
+
+
 
 export default function AppInteractive({
   requiredNameMessage,
@@ -12,35 +25,34 @@ export default function AppInteractive({
   minNameLength,
   minDescriptionLength,
 }) {
-  const schemaData = useMemo(
-    () => ({
-      name: createValidations(
-        [],
-        createRequiredValidation(requiredNameMessage),
-        createMinLengthValidation(
-          minNameLength,
-          ({ length, min }) =>
-            `Name should have more than ${min} characters. (Remaining ${
-              length > min ? 0 : min - length
-            })`
-        )
-      ),
-      description: createValidations(
-        [],
-        createRequiredValidation(requiredDescriptionMessage),
-        createMinLengthValidation(
-          minDescriptionLength,
-          ({ length, min }) =>
-            `Description should have more than ${min} characters. (Remaining ${
-              length > min ? 0 : min - length
-            })`
-        )
-      ),
-    }),
-    [requiredNameMessage, minNameLength, requiredDescriptionMessage, minDescriptionLength]
-  );
-
-  return <App schemaData={schemaData} />;
+  const schemaData = useRef(SchemaBuilder.builder()
+  .with("name")
+  .check("required", { response: () => ({ message: requiredNameMessage })})
+  .check("min-length", { min: minNameLength, response: (metadata) => {
+    const { value, min } = metadata;
+    const length = (value ?? "").length;
+    const message = 
+    `Name should have more than ${min} characters. (Remaining ${
+      length > min ? 0 : min - length
+    })`;
+    return { message };
+  } })
+  .end()
+  .with("description")
+  .check("required", { response: () => ({ message: requiredDescriptionMessage })})
+  .check("min-length", { min: minDescriptionLength, response: (metadata) => {
+    const { value, min } = metadata;
+    const length = (value ?? "").length;
+    const message = 
+    `Description should have more than ${min} characters. (Remaining ${
+      length > min ? 0 : min - length
+})`;
+    return { message };
+  } })
+  .end()
+  .build());
+  
+  return <App schemaData={schemaData.current} />;
 }
 
 AppInteractive.propTypes = {

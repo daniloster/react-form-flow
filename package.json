@@ -157,7 +157,7 @@
     "prepublish": "npm run build",
     "lint:fix": "eslint --fix src --config ./.eslintrc.json --ignore-path ./.eslintignore",
     "doc": "react-docgen ./src --ignore node_modules,lib,dist,docs,DEV,coverage,mochawesome-reports,mochawesome-report,webpack.config.js,src/__test__ -e **/*.spec.js --resolver findAllComponentDefinitions --pretty | ./tools/docs/generateDocs.sh",
-    "storybook": "start-storybook --port 8080",
-    "build:storybook": "build-storybook -c .storybook -o docs"
+    "storybook": "start-storybook  --docs --no-manager-cache --port 8080",
+    "build:storybook": "build-storybook  --docs -c .storybook -o docs"
   }
 }
