@@ -3,7 +3,7 @@
 Manage your form through a small structure for capturing and validating form data.
 
 [![NPM](https://img.shields.io/npm/v/react-form-flow.svg?style=flat-square) ![NPM](https://img.shields.io/npm/dm/react-form-flow.svg?style=flat-square)](https://www.npmjs.com/package/react-form-flow)
-[![Build Status](https://travis-ci.com/daniloster/react-form-flow.svg?branch=master)](https://travis-ci.com/daniloster/react-form-flow)
+[![Build Status](https://github.com/daniloster/react-form-flow/actions/workflows/nodejs/badge.svg)](https://github.com/daniloster/react-form-flow/actions/workflows/nodejs.yml)
 [![minizipped size](https://flat.badgen.net/bundlephobia/minzip/react-form-flow)](https://bundlephobia.com/result?p=react-form-flow@latest)
 
 ## Documentation
