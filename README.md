@@ -23,7 +23,7 @@ Manage your form through a small structure for capturing and validating form dat
 - Changes must be approved;
 - Changes must have tests passing on Travis-CI;
 - Changes must have coverage of 95% on Travis-CI for: statements, branches, functions and lines;
-- Last commit message must have attribute `[release=major|minor|patch|no-release]`;
+- Last commit message must have attribute `[release] [major|minor|patch]`;
 
 ## Current core dependencies versions
 
