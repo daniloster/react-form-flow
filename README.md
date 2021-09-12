@@ -8,7 +8,7 @@ Manage your form through a small structure for capturing and validating form dat
 
 ## Documentation
 
-- [Getting started](hhttps://codeinbox.me/react-form-flow/?path=/docs/docs-getting-started--page)
+- [Getting started](https://codeinbox.me/react-form-flow/?path=/docs/docs-getting-started--page)
 - [Recipes: Schema Builder](https://codeinbox.me/react-form-flow/?path=/docs/docs-recipes-schema-builder--schema-builder)
 - [Recipes: Factory for validations](https://codeinbox.me/react-form-flow/?path=/docs/docs-recipes-validations--page)
 - [Recipes: useFormFlowItem](https://codeinbox.me/react-form-flow/?path=/docs/docs-recipes-useformflowitem--page)
