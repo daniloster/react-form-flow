@@ -1,10 +1,16 @@
-## Getting started with useFormFlowItem
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+
+<Meta title="Docs/Recipes/useFormFlowItem" component={() => <div />} />
+
+# useFormFlowItem
 
 `react-form-flow` as its name describes is a library to define a common and automated workflow to collect and validate form data. Allow user to consume the data and validation based on the json path.
 
 To improve your productivity, it would be good to create your core form components such as input, dropdowns and on and on following the `react-form-flow` spec.
 
 _JSON PATH_ is a notation to navigate through the JSON object.
+
+While we are going to exemplify how to use the `useFormFlowItem`, it is encouraged to use the `useFormFlowField` used in the `Docs/Recipes/Elements` and `Docs/Getting Started`.
 
 e.g.
 
@@ -23,12 +29,12 @@ const data = {
 
 So, observing the json above, the json path to access the name of first child is `"person.chidlren[0].name"`.
 
-### Validation
+### ValidationResult
 
 ```jsx
 import React from 'react';
 
-export default function Validation({ label, validations }) {
+export default function ValidationResult({ label, validations }) {
   return (
     <section>
       {!!label && <div>{label}</div>}
@@ -47,7 +53,7 @@ The input field could receive from the `useFormFlowItem` an object with the spec
   onChangeValue /* Function to update an object regarding the json path and value */,
   onChange /* Function to handle input event "change" */,
   setData /* Function to set the whole form data */,
-  validations  /* arrayOf(Validation) */,
+  validations  /* arrayOf(ValidationResult) */,
   value /* string */,
 }
 ```
@@ -56,22 +62,12 @@ Component...
 
 ```jsx
 import React from 'react';
-import Validation from './Validation';
-
-/**
- * @typedef Validation
- * @property {object} data
- * @property {any} value
- * @property {string} path
- * @property {string} key
- * @property {boolean} isValid
- * @property {string|React.node} message
- * */
+import ValidationResult from './ValidationResult';
 
 export default function InputField({
   label,
   onChange,
-  validations /* {array<Validation>} */,
+  validations /* Array<Validation> (type) */,
   value,
 }) {
   return (
@@ -79,7 +75,7 @@ export default function InputField({
       <div>{label}</div>
       <input type="text" onChange={onChange} value={value} />
       <div>
-        <Validation validations={validations} />
+        <ValidationResult validations={validations} />
       </div>
     </div>
   );
@@ -93,53 +89,22 @@ InputField.defaultProps = {
 #### schemaData
 
 ```jsx
-import { createValidations } from 'react-form-flow';
+import { SchemaBuilder } from 'react-form-flow';
 
-function createRequiredValidation(message) {
-  return ({ data, value, path }) => {
-    const key = `${path}-required`;
-    const isValid = hasValue(value);
+SchemaBuilder.factory("required", (metadata) => hasValue(metadata.value ?? ""));
+SchemaBuilder.factory("min-length", ({ value }) => !hasValue(value ?? "") || (value ?? "").length >= min, {
+  response: ({ value }) => ({ length: (value ?? "").length })
+});
 
-    return { data, value, path, key, isValid, message };
-  };
-}
-
-function createMinLengthValidation(min, createMessage) {
-  return args => {
-    const { data, value, path } = args;
-    const key = `${path}-min-length`;
-    const isValid = !hasValue(value) || value.length >= min;
-    const { length } = value || '';
-    const message = createMessage({ data, value, path, min, length });
-
-    return { data, value, path, key, isValid, message };
-  };
-}
-
-const schemaData = {
-  name: createValidations(
-    [],
-    createRequiredValidation('Name is required!'),
-    createMinLengthValidation(
-      5,
-      ({ length, min }) =>
-        `Name should have more than ${min} characters. (Remaining ${
-          length > min ? 0 : min - length
-        })`
-    )
-  ),
-  description: createValidations(
-    [],
-    createRequiredValidation('Description is required!'),
-    createMinLengthValidation(
-      300,
-      ({ length, min }) =>
-        `Description should have more than ${min} characters. (Remaining ${
-          length > min ? 0 : min - length
-        })`
-    )
-  ),
-};
+export default SchemaBuilder.builder()
+  .with("name")
+  .check("required", { message: "Name is required" })
+  .check("min-length", { min: 5, message: "Name must be greater than 5 characters" })
+  .end()
+  .with("description")
+  .check("required", { message: "Description is required" })
+  .check("min-length", { min: 50, message: "Name must be greater than 50 characters" })
+  .end()
 ```
 
 #### App
@@ -152,15 +117,13 @@ A few things are required in order to use the `react-form-flow` library.
 
 ```jsx
 import React from 'react';
-// eslint-disable-next-line
 import styled from 'styled-components';
 import {
-  createValidations,
   FormFlowProvider,
   useFormFlowItem,
   useFormFlowValidation,
 } from 'react-form-flow';
-import Validation from './Validation';
+import ValidationResult from './ValidationResult';
 import InputField from './InputField';
 import schemaData from './schemaData';
 
@@ -180,8 +143,8 @@ function Validations() {
 
   return (
     <div>
-      <Validation label="Name" {...nameValidation} />
-      <Validation label="Description" {...descriptionValidation} />
+      <ValidationResult label="Name" {...nameValidation} />
+      <ValidationResult label="Description" {...descriptionValidation} />
     </div>
   );
 }

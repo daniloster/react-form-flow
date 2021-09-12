@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Validation from '../react-form-flow-examples/fields/Validation';
 import { FormFlowProvider, useFormFlowItem, useFormFlowValidation } from '../src';
+import ValidationType from '../src/SchemaBuilder/Validation';
 
 function UpdateData({ data }) {
   const { setData } = useFormFlowItem();
@@ -20,12 +21,13 @@ const ValidationsLayout = styled.div`
   }
 `;
 
-function Validations({ schemaData }) {
-  const { validations } = useFormFlowValidation();
+function Validations() {
+  const { validations } = useFormFlowValidation() as { validations: ValidationType[] };
+  
 
   return (
     <ValidationsLayout>
-      {Object.keys(schemaData).map(jsonPath => (
+      {Array.from(new Set(validations.map((validation) => validation.path)).values()).map(jsonPath => (
         <React.Fragment key={jsonPath}>
           <Validation
             isColored
@@ -45,7 +47,7 @@ export default function RecipesValidations({ data, schemaData }) {
     <FormFlowProvider initialData={data} schemaData={schemaData}>
       <h2>Try change the validations or the data in the console below...</h2>
       <UpdateData data={data} />
-      <Validations schemaData={schemaData} />
+      <Validations />
     </FormFlowProvider>
   );
 }

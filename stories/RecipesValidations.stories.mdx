@@ -1,0 +1,299 @@
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import RecipesSchemaBuilder, { decode, data } from './RecipesSchemaBuilder'
+
+<Meta
+  title="Docs/Recipes/Validations"
+  component={RecipesSchemaBuilder}
+  parameters={{
+    docs: { source: { code: "" }}
+  }}
+/>
+
+# Recipes
+
+The idea here is to show how to optimise your performance by reusing some strategies. For this, we are going to use factory methods to build validations.
+
+## Quick reminder
+
+The `schemaData` object is built indexing validations by provided JSON PATH.
+
+## Factories
+
+Factory method is a creational pattern to deal with creation of objects in general. Its definition could be also expanded to creation of contracts.
+
+Following the examples below we are going to factory a required validation. So, these validations have the same type of check varying on path and key returned.
+
+### Factoring required
+
+Factory a required validation pre-defining the key and path uniquely and allowing end consumer to define the message returned.
+
+The return of the validation function must provide the interface below.
+
+```ts
+interface Validation {
+  /**
+   * The whole data form
+   */
+  data: any;
+  /**
+   * The dependency values for conditionals
+   */
+  dependencies: Array<any>;
+  /**
+   * Method to get value given a form data and json path
+   * @param data - the form data
+   * @param path - the json path
+   * @returns {any}
+   */
+  get(data: any, path: string): any;
+  /** 
+   * Whether the validation passed or failed
+   */
+  isValid: boolean;
+  /** 
+   * Validation name
+   */
+  name: string;
+  /** 
+   * A construction of {path + ".errors." + name}
+   * e.g.
+   * - path: user.role
+   * - name: required
+   * - key: user.role.errors.required
+   */
+  key: string;
+  /**
+   * The path to be validated
+   */
+  path: string;
+  /**
+   * The value related to the path in the form
+   */
+  value: any;
+  /** 
+   * Any extra information provided
+   */
+  [key: string]: any;
+}
+```
+
+__src/SchemaBuilder.js__
+```js
+import { SchemaBuilder } from "react-form-flow";
+
+function hasValue(value) {
+  return (
+    value !== null && value !== undefined && (typeof value !== 'string' || (value && value.trim()))
+  );
+}   
+
+SchemaBuilder.factory("required", (metadata) => hasValue(metadata.value ?? ""));
+
+export default SchemaBuilder;
+```
+
+### Factoring max length
+
+For the max length validation where we will provide dynamic metadata for further usage.
+
+Continuation on __src/SchemaBuilder.js__
+```jsx
+SchemaBuilder.factory("max-length", (metadata) => {
+  const value = metadata.value ?? "";
+  // Either will be valid if there is no value, or it is lesser of equals than max.
+  // Also, we expect the max valid is provided when using the factored validation
+  const isValid = !hasValue(value) || value.length <= metadata.max;
+  return isValid;
+}, {
+  // Here, we are adding useful information to all schema data using this validation.
+  response: (metadata) => ({ length: (metadata.value ?? "").trim().length })
+});
+```
+
+### Creating the schemaData
+
+To create our schemaData we need to make use of the `src/SchemaBuilder`. Make sure to import the SchemaBuilder from your wrapper to make sure the `factory` has registed the common validations before using it.
+
+__src/schemaData.js__
+```jsx
+import SchemaBuilder from './SchemaBuilder';
+
+export default SchemaBuilder.builder()
+  .with("name")
+  .check("required")
+  .check("max-length", { max: 50 })
+  .end()
+  .build();
+```
+
+#### Using the additional information "length"
+
+
+```jsx
+import { FormFlowProvider, useFormFlowField } from 'react-form-flow';
+import i18n from './i18n';
+import schemaData from "./schemaData"
+
+/**
+Imagine the translation as 
+
+{
+  "name": {
+    "errors": {
+      "max-length": "Name cannot be greater than {{max}} (characters {{length}}/{{max}})."
+    }
+  }
+}
+
+*/ 
+
+function  MinMaxLengthMessage({ min, max, unit }) {
+  return `Only values between ${min} and ${max} is allowed for ${unit}.`;
+}
+
+function Form() {
+  const { errors } = useFormFlowField('name');
+  /** 
+   * Flexibility provided by defining the end message through translation libraries
+   */
+  const { t } = useTranslate();
+  return (
+    <div>
+      {errors.map(
+        (validation) => (
+          <div key={validation.key}>
+            {t(validation.key, { values: { length: validation.length, max: validation.max } })}
+          </div>
+        )
+      )}
+    </div>
+  )
+}
+
+// forcing the error in the validation
+const initialData = { name: Array.from({ length: 51 }).map(() => "a").join("") };
+  
+function App() {
+  return (
+    <FormFlowProvider initialData={initialData} schemaData={schemaData}>
+      <Form />
+    </FormFlowProvider>
+  );
+}
+```
+
+### Dependencies
+
+Lets say you have a validation for range, but, this information is obtained from 2 fields which would have `min`, `max` constraints for the value and a list of acceptable units e.g. `['seconds', 'minutes', 'hours']`.
+
+Continuation on __src/SchemaBuilder.js__
+```js
+const MinMaxUnitsConstraints = {
+  seconds: [0, 60],
+  minutes: [0, 60],
+  hours: [0, 24],
+}
+SchemaBuilder.factory("min-max-units", (metadata) => {
+  const { dependencies } = metadata;
+  const [unit] = dependencies;
+  const value = Number(metadata.value ?? "0");
+  const [min, max] = MinMaxUnitsConstraints[unit];
+  const isValid = !hasValue(value) || (value <= max && value >= min);
+  return isValid;
+}, {
+  response: (metadata) => {
+    const { dependencies } = metadata;
+    const [unit] = dependencies;
+    const [min, max] = MinMaxUnitsConstraints[unit];
+    return { min, max };
+  }
+})
+```
+
+### New schemaData
+
+```js
+import SchemaBuilder from "./SchemaBuilder";
+
+export default SchemaBuilder.builder()
+  /** 
+   * Declaring an invalidation path
+   */
+  .with("product.expiresIn.value", ["$.unit"])
+  .check("requried")
+  .check("min-max-units")
+  .end()
+  .with("product.expiresIn.unit")
+  .check("requried")
+  .end()
+  .build()
+```
+
+By doing `.with("product.expiresIn.value", ["$.unit"])`, you have provided an invalidation path list. Every time that the `unit` is changed the validation for `value` is also computed.
+
+### Multiple Dependencies
+
+The invalidation paths can be defined by absolute and relative paths. Being `$.` the way to navigate to parent node in relative path. We can better see it through examples.
+
+Below find an example of multiple dependencies, and the navigation to higher scope levels.
+
+```js
+import SchemaBuilder from "./SchemaBuilder";
+
+export default SchemaBuilder.builder()
+  .with("product.madeOn")
+  .check("requried")
+  .end()
+  .with("product.expiresIn.value", ["$.unit", "$.$.madeOn"])
+  .check("requried")
+  .check("min-max-units")
+  .end()
+  .with("product.expiresIn.unit")
+  .check("requried")
+  .end()
+  .build()
+```
+
+Taking `product.expiresIn.value` and breaking into partial paths `["product", "expiresIn", "value"]`, the navigation `$.` refers going back to `expiresIn`. Whereas `$.$.`, it would refer to `product`.
+
+##### Array as one of dependencies
+
+Let say, you need a validation to be performed for changes in correlated data based on indexes. Before going straight to the example, we need to understand a notation to refer to the indexes.
+
+Given the rule `contacts[]`, this means we have validations running for each element of the array contacts. To correlated indexes, we can user the reference to ocurency of `[]` as `$N`, being `N` the index where the `[]` occurs in the original rule.
+
+Ok, I get it too. It seems complex. Lets make it simple by examples.
+
+- Given the rule `people[].contacts[]`, invalidation paths `['$.friends[$1]']`
+  - Everytime friends at `N` changes, the people `people[i].contacts[N]` will be re-validated
+  - This because the index of `[]` for `contacts` in the original rule is `1`, then, it is referred at `friends` as `$1`
+- Given the rule `store.foods[]`, invalidation paths `['$.stocks[$0]']`
+  - Everytime stocks at `N` changes, the foods `store.foods[N]` will be re-validated
+  - This because the index of `[]` for `foods` in the original rule is `0`, then, it is referred at `stocks` as `$0`
+
+
+
+```js
+import SchemaBuilder from "./SchemaBuilder";
+
+SchemaBuilder.factory("requried.if-in-stock", (metadata) => {
+  const { dependencies } = metadata;
+  const [stockWithSameIndex] = dependencies;
+  const value = metadata.value ?? "";
+  /** 
+   * If there is value is valid, if not, only if there is stock. So, no value
+   * and stock 0 is valid.
+   */
+  const isValid = hasValue(value) || Number(stockWithSameIndex ?? 0) === 0;
+  return isValid;
+})
+
+export default SchemaBuilder.builder()
+  .with("store.stocks[]")
+  .check("requried")
+  .end()
+  .with("store.foods[]", ["$.stocks[$0]"])
+  .check("requried.if-in-stock")
+  .end()
+  .build()
+```

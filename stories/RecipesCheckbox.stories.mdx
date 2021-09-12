@@ -1,4 +1,19 @@
-# Checkbox Field Recipe
+import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
+import RecipesSchemaBuilder, { decode, data } from './RecipesSchemaBuilder'
+
+<Meta
+  title="Docs/Recipes/Elements/Checkbox"
+  component={RecipesSchemaBuilder}
+  parameters={{
+    docs: { source: { code: "" }}
+  }}
+/>
+
+# Recipes
+
+How to build specific form elements to use the hooks provided by `react-form-flow`.
+
+## Checkbox Field
 
 This recipe will show how to build a group/simple checkbox using the `input[type="checkbox"]` markup following the interface defined by `react-form-flow`.
 
@@ -6,7 +21,7 @@ This recipe will show how to build a group/simple checkbox using the `input[type
 
 Here, we are using [styled-components](https://www.styled-components.com/) for prettifying styles.
 
-### Validation
+__src/ValidationResult.jsx__
 
 You will probably need a component to display the validations, see the draft below.
 
@@ -14,40 +29,39 @@ You will probably need a component to display the validations, see the draft bel
 import React from 'react';
 import styled from 'styled-components';
 
-const ValidationLayout = styled.section`
-  .ValidationLayout__message {
+const ValidationResultLayout = styled.section`
+  .ValidationResultLayout__message {
     color: red;
   }
 `;
 
-export default function Validation({ validations = [] }) {
+export default function ValidationResult({ errors = [] }) {
   return (
-    <ValidationLayout>
+    <ValidationResultLayout>
       {validations.map(
-        ({ key, isValid, message }) =>
-          !isValid && (
-            <div className="ValidationLayout__message" key={key}>
-              {message}
-            </div>
-          )
+        (validation) =>(
+          <div className="ValidationResultLayout__message" key={validation.key}>
+            {JSON.stringify(validation, null, 2)}
+          </div>
+        )
       )}
-    </ValidationLayout>
+    </ValidationResultLayout>
   );
 }
 ```
 
-### CheckboxField
+__src/CheckboxField.jsx__
 
 Here, validations are received always and the consumer decides when to display them.
 
-**Note**: For this case, we are displaying the validations straightaway, but, nothing block you to pass some property to control as it will be displayed. e.g. `showValidation` when the form is submitted, then, it would be able to display by `{showValidation && <Validation validations={validations} />}`.
+**Note**: For this case, we are displaying the validations straightaway, but, nothing block you to pass some property to control as it will be displayed. e.g. `showValidation` when the form is submitted, then, it would be able to display by `{showValidation && <ValidationResult validations={validations} />}`.
 
 ```jsx
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import styled from 'styled-components';
-import Validation from './Validation';
+import ValidationResult from './ValidationResult';
 
 const CheckboxFieldLayout = styled.div`
   padding: 0 0 10px 0;
@@ -71,12 +85,14 @@ const CheckboxFieldLayout = styled.div`
 
 export default function CheckboxField({
   checkedValue,
+  errors,
+  field,
   label: labelText,
-  onChangeValue,
-  validations,
-  value,
+  submitted,
+  touched,
 }) {
   const id = useRef(uuid.v4());
+  const { onBlur, onChangeValue, value = '' } = field;
   const onChange = useCallback(() => {
     const treatedValue = value || [];
     const hasValue = treatedValue.includes(checkedValue);
@@ -94,52 +110,39 @@ export default function CheckboxField({
         <input
           id={id.current}
           type="checkbox"
+          onBlur={onBlur}
           onChange={onChange}
           checked={(value || []).includes(checkedValue)}
         />
       </label>
       <div className="CheckboxFieldLayout__validations">
-        <Validation validations={validations} />
+        {(submitted || touched) && <ValidationResult errors={errors} />}
       </div>
     </CheckboxFieldLayout>
   );
 }
 
-CheckboxField.propTypes = {
-  checkedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])
-    .isRequired,
-  label: PropTypes.string,
-  onChangeValue: PropTypes.func.isRequired,
-  validations: PropTypes.arrayOf(PropTypes.shape({})),
-  value: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.bool,
-    PropTypes.arrayOf(PropTypes.any),
-  ]),
-};
 
 CheckboxField.defaultProps = {
   label: null,
-  validations: [],
-  value: '',
+  errors: []
 };
 ```
 
 ## Using the CheckboxField
 
-After building the Dropdown, see below how to use it.
+After building the Checkbox, see below how to use it.
 
 ```jsx
 import React from 'react';
 import styled from 'styled-components';
-import { useFormFlowItem } from 'react-form-flow';
+import { useFormFlowField } from 'react-form-flow';
 import CheckboxField from './CheckboxField';
 
 const CheckboxFieldRecipeLayout = styled.div``;
 
 export default function CheckboxFieldRecipe() {
-  const skillsField = useFormFlowItem('skills');
+  const skillsField = useFormFlowField('skills', { eventType: 'value' });
 
   return (
     <CheckboxFieldRecipeLayout>
