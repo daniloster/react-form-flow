@@ -21,8 +21,8 @@ Manage your form through a small structure for capturing and validating form dat
 ## Contributions rules
 
 - Changes must be approved;
-- Changes must have tests passing on Travis-CI;
-- Changes must have coverage of 95% on Travis-CI for: statements, branches, functions and lines;
+- Changes must have tests passing on github actions;
+- Changes must have coverage of 95% on github actions for: statements, branches, functions and lines;
 - Last commit message must have attribute `[release] [major|minor|patch]`;
 
 ## Current core dependencies versions
