@@ -272,21 +272,12 @@ Ok, I get it too. It seems complex. Lets make it simple by examples.
   - This because the index of `[]` for `foods` in the original rule is `0`, then, it is referred at `stocks` as `$0`
 
 
+You may question the example below thinking that is too much to create a "common validation" for something to be used only once, or very much bound to a specific context. It makes sense, the example is only to ilustrate dependencies, if you want to deal with domain validations or one-time validations, please checkout the next section.
 
 ```js
 import SchemaBuilder from "./SchemaBuilder";
 
-SchemaBuilder.factory("requried.if-in-stock", (metadata) => {
-  const { dependencies } = metadata;
-  const [stockWithSameIndex] = dependencies;
-  const value = metadata.value ?? "";
-  /** 
-   * If there is value is valid, if not, only if there is stock. So, no value
-   * and stock 0 is valid.
-   */
-  const isValid = hasValue(value) || Number(stockWithSameIndex ?? 0) === 0;
-  return isValid;
-})
+SchemaBuilder.factory()
 
 export default SchemaBuilder.builder()
   .with("store.stocks[]")
@@ -297,3 +288,41 @@ export default SchemaBuilder.builder()
   .end()
   .build()
 ```
+
+## Domain validations / One-time validations
+
+Some form data will require validations that are very much domain attached and it won't be reused anywhere else, for this reason a dynamic validation can be created at the time the `schemaData` is being built. Let's look at the example where we improve the previous usage.
+
+__src/schemaData.js__
+```jsx
+import SchemaBuilder from './form/SchemaBuilder';
+
+/** 
+ * Adding more metadata to the Validation result object
+ */
+function getLength(metadata) {
+  const { length } = (metadata.value ?? "").trim();
+  return { length };
+}
+
+export default SchemaBuilder.builder()
+  .with("store.stocks[]")
+  .check("requried")
+  .end()
+  .with("store.foods[]", ["$.stocks[$0]"])
+  .test("requried.if-in-stock", (metadata) => {
+    const { dependencies } = metadata;
+    const [stockWithSameIndex] = dependencies;
+    const value = metadata.value ?? "";
+    /** 
+     * If there is value is valid, if not, only if there is stock. So, no value
+     * and stock 0 is valid.
+     */
+    const isValid = hasValue(value) || Number(stockWithSameIndex ?? 0) === 0;
+    return isValid;
+  })
+  .end()
+  .build()
+```
+
+**Note**: By nature one-time validations won't be reused as `.check("validation-name", ...)`.

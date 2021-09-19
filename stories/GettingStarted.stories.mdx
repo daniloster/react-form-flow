@@ -4,7 +4,26 @@ import { Meta, Story, Canvas, Props } from '@storybook/addon-docs'
 
 # Getting Started
 
-`react-form-flow` as its name describes is a library to define a common and automated workflow to collect and validate form data. Allow user to consume the data and validation based on the json path.
+[react-form-flow](https://www.npmjs.com/package/react-form-flow) as its name describes is a library to define a common and automated workflow to collect and validate form data. Allow user to consume the data and validation based on the json path.
+
+## When should I consider using react-form-flow to manage form?
+
+There are several types of form library for `react`, and they have their pros and cons, and this library is no different. So there are some case you may not need or want to use this library.
+
+- If it is a simple form
+- If you application have only a single medium complexity form
+
+The [react-form-flow](https://www.npmjs.com/package/react-form-flow) is very flexible and provide ways to manage complex relations/validation over the data. The initial step to consume may require a bit more effort to consume this library either by factorying custom validation or by creating _Input Form Wrappers_ with compatible interface. Checkout [Recipes/Validations](?path=/docs/docs-recipes-validations--page) and [Recipes/Elements](?path=/docs/docs-recipes-elements-checkbox--page).
+
+Some libraries are focused on the form elements, whereas the [react-form-flow](https://www.npmjs.com/package/react-form-flow) is focused on the data itself. If you had to remove some elements from the view for sake of visual/UX, the data is still retained in the form data.
+
+So, when is this library recommended:
+
+- If you are building an application with a few forms
+- If you are building an application with at least 1 complex form
+
+This is justified for the initial cost of adoption, once paid, it brings a lot of benefits and speed managing form data.
+
 
 ## How to use it
 
@@ -24,7 +43,7 @@ import { useFormFlowField, useFormFlowValidation } from 'react-form-flow';
 
 ## First Steps
 
-To improve your productivity, it would be good to create your core form components such as input, dropdowns and on and on following the `react-form-flow` spec.
+To improve your productivity, it would be good to create your core form components such as input, dropdowns and on and on following the [react-form-flow](https://www.npmjs.com/package/react-form-flow) spec.
 
 [Code Sandbox Example](https://codesandbox.io/s/pensive-paper-sgykr)
 
@@ -206,7 +225,7 @@ export default SchemaBuilder.builer()
 
 #### App
 
-A few things are required in order to use the `react-form-flow` library.
+A few things are required in order to use the [react-form-flow](https://www.npmjs.com/package/react-form-flow) library.
 
 - initialData: the initial data to be rendered in the form
 - schemaData: an object with validation rules per json path
@@ -266,4 +285,58 @@ Running...
 <DemoApp />
 ```
 
+## Aditional tip: Domain validations / One-time validations
 
+Some form data will require validations that are very much domain attached and it won't be reused anywhere else, for this reason a dynamic validation can be created at the time the `schemaData` is being built. Let's look at the example below where we will validate an email as required if only name is greater than 3 chars.
+
+
+__src/schemaData.js__
+```jsx
+import SchemaBuilder from './form/SchemaBuilder';
+
+/** 
+ * Adding more metadata to the Validation result object
+ */
+function getLength(metadata) {
+  const { length } = (metadata.value ?? "").trim();
+  return { length };
+}
+
+export default SchemaBuilder.builer()
+  .with("name")
+  .check("required")
+  .check("min-length", { min: 5, response: getLength })
+  .check("max-length", { max: 50, response: getLength })
+  .end()
+  // first, we set the name  as dependency
+  .with("email", ["$.name"])
+  // .check("required") // removed the static required
+  .check("min-length", { min: 10, response: getLength })
+  .check("max-length", { max: 250, response: getLength })
+  /** 
+   * If the validation is one-time used, you can create it on the fly
+   * using "test"
+   */
+  .test("invalid", (metadata) => {
+    const value = metadata.value ?? "";
+    const isValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(value);
+    return isValid;
+  })
+  .test("requiredConditional", (metadata) => {
+    const {
+      value,
+      dependencies: [name]
+    } = metadata;
+    // validation will always be considered initially as true
+    let isValid = true;
+
+    // only validates if name is greater than 3 chars
+    if ((name || "").toString().trim().length > 3) {
+      isValid = Boolean((value ?? "").toString().trim());
+    }
+
+    return isValid;
+  })
+  .end()
+  .build()
+```

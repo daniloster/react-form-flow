@@ -158,6 +158,7 @@
     "lint:fix": "eslint --fix src --config ./.eslintrc.json --ignore-path ./.eslintignore",
     "doc": "react-docgen ./src --ignore node_modules,lib,dist,docs,DEV,coverage,mochawesome-reports,mochawesome-report,webpack.config.js,src/__test__ -e **/*.spec.js --resolver findAllComponentDefinitions --pretty | ./tools/docs/generateDocs.sh",
     "storybook": "start-storybook  --docs --no-manager-cache --port 8080",
+    "prebuild:storybook": "[ -d './docs' ] && rm -rf ./docs || echo '[build:storybook]: no docs folder to be removed'",
     "build:storybook": "build-storybook  --docs -c .storybook -o docs"
   }
 }
