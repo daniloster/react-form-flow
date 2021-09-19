@@ -230,6 +230,7 @@ A few things are required in order to use the [react-form-flow](https://www.npmj
 - initialData: the initial data to be rendered in the form
 - schemaData: an object with validation rules per json path
 - children: the react node being wrapped by the provider containing the real form within fields
+- useResetForm & useSubmitForm: to create handlers for form submission
 
 ```jsx
 import React from 'react';
@@ -240,6 +241,8 @@ import {
   FormFlowProvider,
   useFormFlowField,
   useFormFlowValidation,
+  useResetForm,
+  useSubmitForm,
 } from 'react-form-flow';
 import Validation from './Validation';
 import InputField from './InputField';
@@ -269,12 +272,18 @@ function Form() {
 }
 
 function DemoApp() {
+  const { ref, onReset } = useResetForm();
+  const { onSubmit } = useSubmitForm((data, metadata) => {
+    console.log("Submitted", { data });
+  });
   return (
-    <Layout>
-      <FormFlowProvider initialData={initialData} schemaData={schemaData}>
-        <Form />
-      </FormFlowProvider>
-    </Layout>
+    <form ref={ref} onReset={onReset} onSubmit={onSubmit}>
+      <Layout>
+        <FormFlowProvider initialData={initialData} schemaData={schemaData}>
+          <Form />
+        </FormFlowProvider>
+      </Layout>
+    </form>
   );
 }
 ```
