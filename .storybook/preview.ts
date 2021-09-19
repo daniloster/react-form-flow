@@ -29,11 +29,17 @@ export const parameters = {
           return -101;
         }
 
-        if (b[1].kind.includes('useFormFlowItem')) {
+        if (b[1].kind.includes('useFormFlowField')) {
           return 102;
         }
-        if (a[1].kind.includes('useFormFlowItem')) {
+        if (a[1].kind.includes('useFormFlowField')) {
           return -102;
+        }
+        if (b[1].kind.includes('useFormFlowItem')) {
+          return 103;
+        }
+        if (a[1].kind.includes('useFormFlowItem')) {
+          return -103;
         }
 
         return b[1].kind > a[1].kind ? -1 : 1;
