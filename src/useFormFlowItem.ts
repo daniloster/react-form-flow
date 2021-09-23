@@ -7,7 +7,7 @@ import Validation from './SchemaBuilder/Validation';
 import useFormFlow from './useFormFlow';
 import useFormFlowValidation from './useFormFlowValidation';
 
-type FormFlowItem<T = any> = {
+export type FormFlowItem<T = any> = {
   data: Object;
   dirty: boolean;
   onBlur: (e: Event) => void;

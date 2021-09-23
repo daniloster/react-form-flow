@@ -24,6 +24,7 @@ export type Field = {
   onBlur?: <T>(e: T) => void;
   onChange?: <T>(e: T) => void;
   onChangeValue?: (value: any) => void;
+  value: any;
 };
 
 export type FormFlowField = {
@@ -83,4 +84,5 @@ function useFormFlowField(path: string, options?: MetadataField): FormFlowField 
   return { dirty, errors, field, submitted, touched };
 }
 
+export { useFormFlowField };
 export default useFormFlowField;

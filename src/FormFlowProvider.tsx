@@ -6,7 +6,7 @@ import isValidByPaths from './isValidByPaths';
 import { ObservableState } from './react-state';
 import SchemaData from './SchemaBuilder/SchemaData';
 
-type FormFlowProviderProps = {
+export type FormFlowProviderProps = {
   /**
    * React.Node where the form fields are rendered
    */
