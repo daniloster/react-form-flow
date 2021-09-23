@@ -3,8 +3,8 @@ import FormFlowDataContext from './FormFlowDataContext';
 import isValidByPaths from './isValidByPaths';
 import ValidationState from './SchemaBuilder/ValidationState';
 
-type SubmissionMetadata = ValidationState & { isValid: boolean; e: FormEvent };
-type SubmitHandler = (values: any, metadata: SubmissionMetadata) => void;
+export type SubmissionMetadata = ValidationState & { isValid: boolean; e: FormEvent };
+export type SubmitHandler = (values: any, metadata: SubmissionMetadata) => void;
 
 /**
  * Creates properties to handle form submission

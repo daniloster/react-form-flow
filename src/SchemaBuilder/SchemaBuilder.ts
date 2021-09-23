@@ -126,7 +126,7 @@ function getPurgedList(validationNames?: string | string[]): string[] {
   throw new Error('Argument "validationNames" can only be string, array or undefined.');
 }
 
-export default Object.freeze({
+export const SchemaBuilder = Object.freeze({
   /**
    * Initialize the builder for schema
    */
@@ -150,3 +150,5 @@ export default Object.freeze({
     return removed;
   },
 });
+
+export default SchemaBuilder;
