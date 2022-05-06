@@ -84,7 +84,7 @@
     "jest-watch-typeahead": "0.6.4",
     "jsdom": "17.0.0",
     "json-loader": "0.5.7",
-    "moment": "2.24.0",
+    "moment": "2.29.2",
     "mutation-helper": "1.0.0",
     "prettier": "1.16.4",
     "prismjs": "1.27.0",
